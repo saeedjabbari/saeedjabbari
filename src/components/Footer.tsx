@@ -1,5 +1,4 @@
-import React from 'react';
-import { ArrowUp, ArrowUpRight, ExternalLink, Globe } from 'lucide-react';
+import { ArrowUp, ArrowUpRight, ExternalLink, Globe, Mail, MessageCircle, Phone, Send } from 'lucide-react';
 import { PROFILE_DATA } from '../data/portfolioData';
 import { Language, PageId } from '../types';
 
@@ -53,24 +52,61 @@ export const Footer: React.FC<FooterProps> = ({
               {PROFILE_DATA.shortBio[lang]}
             </p>
 
-            <div className="flex items-center gap-3 pt-2 text-xs font-bold text-neutral-800">
+            {/* Fast Action Icons (Phone, WhatsApp, Telegram, Email, LinkedIn, Behance) */}
+            <div className="flex flex-wrap items-center gap-2 pt-2 text-xs font-bold text-neutral-800">
+              <a
+                href={`tel:${PROFILE_DATA.links.phone}`}
+                className="w-9 h-9 rounded-full bg-neutral-100 hover:bg-amber-500 hover:text-neutral-950 flex items-center justify-center transition-all cursor-pointer shadow-2xs group"
+                title={lang === 'en' ? 'Direct Phone Call' : 'تماس تلفنی'}
+                aria-label="Direct Phone Call"
+              >
+                <Phone className="w-4 h-4 text-neutral-700 group-hover:text-neutral-950" />
+              </a>
+              <a
+                href={PROFILE_DATA.links.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full bg-neutral-100 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-2xs group"
+                title="WhatsApp"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle className="w-4 h-4 text-neutral-700 group-hover:text-white" />
+              </a>
+              <a
+                href={PROFILE_DATA.links.telegram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full bg-neutral-100 hover:bg-sky-500 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-2xs group"
+                title="Telegram"
+                aria-label="Telegram"
+              >
+                <Send className="w-3.5 h-3.5 text-neutral-700 group-hover:text-white" />
+              </a>
+              <a
+                href={`mailto:${PROFILE_DATA.links.email}`}
+                className="w-9 h-9 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-2xs group"
+                title={PROFILE_DATA.links.email}
+                aria-label="Email"
+              >
+                <Mail className="w-4 h-4 text-neutral-700 group-hover:text-white" />
+              </a>
               <a
                 href={PROFILE_DATA.links.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-neutral-100 hover:bg-neutral-200 rounded-full transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 rounded-full transition-colors text-xs font-bold"
               >
                 <span>LinkedIn</span>
-                <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                <ExternalLink className="w-3 h-3 opacity-60" />
               </a>
               <a
                 href={PROFILE_DATA.links.behance}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-neutral-100 hover:bg-neutral-200 rounded-full transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 rounded-full transition-colors text-xs font-bold"
               >
                 <span>Behance</span>
-                <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                <ExternalLink className="w-3 h-3 opacity-60" />
               </a>
             </div>
           </div>
@@ -116,12 +152,19 @@ export const Footer: React.FC<FooterProps> = ({
               {lang === 'en' ? 'Quick Contact' : 'ارتباط سریع'}
             </span>
             <div className="space-y-2.5 text-xs font-bold">
+              <a
+                href={`tel:${PROFILE_DATA.links.phone}`}
+                className="w-full py-2 px-3 bg-neutral-900 hover:bg-neutral-800 text-amber-400 font-black rounded-full transition-colors text-center block font-display tracking-tight"
+                dir="ltr"
+              >
+                {PROFILE_DATA.links.phoneFormatted}
+              </a>
               <button
                 onClick={() => {
                   onNavigate('contact');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="w-full py-2.5 px-4 bg-neutral-950 hover:bg-neutral-800 text-white rounded-full transition-colors cursor-pointer text-center block"
+                className="w-full py-2.5 px-4 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold rounded-full transition-colors cursor-pointer text-center block"
               >
                 {lang === 'en' ? 'Start a Project' : 'شروع همکاری'}
               </button>

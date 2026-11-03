@@ -41,6 +41,8 @@ export interface ExperienceItem {
   summary: { en: string; fa: string };
   highlights: { en: string[]; fa: string[] };
   badge?: string;
+  category?: 'brand_digital' | 'packaging_3d' | 'editorial_print' | 'civil_engineering';
+  featured?: boolean;
 }
 
 export interface AreaOfExpertise {

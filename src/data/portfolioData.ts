@@ -21,6 +21,10 @@ export const PROFILE_DATA = {
     linkedin: 'https://www.linkedin.com/in/saeedjabbari',
     behance: 'https://www.behance.net/saeedjabbari',
     email: 'contact@saeedjabbari.com',
+    phone: '+989141493453',
+    phoneFormatted: '+98 914 149 3453',
+    whatsapp: 'https://wa.me/989141493453',
+    telegram: 'https://t.me/saeedjabbari',
     location: {
       en: 'Tehran · Open to Worldwide Relocation & Remote Collaborations',
       fa: 'تهران · آماده همکاری‌های پروژه‌ای بین‌المللی و دورکاری',
@@ -594,7 +598,397 @@ export const PROJECTS_DATA: ProjectItem[] = [
 
 export const EXPERIENCE_DATA: ExperienceItem[] = [
   {
-    id: 'exp_1',
+    id: 'exp_tanabi',
+    company: {
+      en: 'Tanabi Trading | Home Appliances',
+      fa: 'شرکت بازرگانی تنابی | لوازم خانگی',
+    },
+    role: {
+      en: 'Graphic Designer & Website Content Manager',
+      fa: 'طراح گرافیک و مدیر محتوای وب‌سایت',
+    },
+    period: {
+      en: 'October 2024 – May 2025',
+      fa: 'مهر ۱۴۰۳ تا اردیبهشت ۱۴۰۴',
+    },
+    location: {
+      en: 'Urmia, Iran',
+      fa: 'ارومیه، ایران',
+    },
+    type: {
+      en: 'Home Appliances Trading & Digital Commerce',
+      fa: 'بازرگانی لوازم خانگی و تجارت دیجیتال',
+    },
+    summary: {
+      en: 'Worked on brand identity, digital communication, and website content management for a home appliances business.',
+      fa: 'همکاری در زمینه طراحی هویت بصری، ارتباطات دیجیتال و مدیریت محتوای وب‌سایت یک مجموعه فعال در حوزه لوازم خانگی.',
+    },
+    highlights: {
+      en: [
+        'Designed company logo, stationery suite, and comprehensive visual identity',
+        'Created business cards, letterheads, invoices, and corporate stationery',
+        'Designed Instagram promotional graphics and high-engagement social content',
+        'Managed and regularly updated company website architecture and product databases',
+        'Wrote, edited, and published website articles alongside digital advertising banners',
+      ],
+      fa: [
+        'طراحی لوگو و هویت بصری مجموعه',
+        'طراحی کارت ویزیت، سربرگ، فاکتور و اقلام اداری',
+        'طراحی محتوای اینستاگرام و گرافیک‌های تبلیغاتی',
+        'مدیریت و به‌روزرسانی مستمر وب‌سایت و اطلاعات محصولات',
+        'نگارش، ویرایش و انتشار مقالات وب‌سایت و طراحی بنرهای دیجیتال',
+      ],
+    },
+    badge: 'Brand & Web Management',
+    category: 'brand_digital',
+    featured: true,
+  },
+  {
+    id: 'exp_khesht_avval',
+    company: {
+      en: 'Khesht Avval Engineering Institute',
+      fa: 'مؤسسه مهندسی خشت اول',
+    },
+    role: {
+      en: 'Brand Identity & Visual Communication Designer',
+      fa: 'طراح هویت برند و ارتباطات بصری',
+    },
+    period: {
+      en: 'October 2024 – May 2025',
+      fa: 'مهر ۱۴۰۳ تا اردیبهشت ۱۴۰۴',
+    },
+    location: {
+      en: 'Urmia, Iran',
+      fa: 'ارومیه، ایران',
+    },
+    type: {
+      en: 'Engineering Professional Education',
+      fa: 'آموزش‌های تخصصی مهندسی و آزمون نظام مهندسی',
+    },
+    summary: {
+      en: 'Collaborated with an engineering training institute providing professional education and preparation courses for Engineering System examinations across civil, architecture, mechanical, and building services.',
+      fa: 'همکاری با یک مؤسسه آموزشی فعال در حوزه آموزش‌های تخصصی مهندسی و برگزاری دوره‌های آمادگی آزمون نظام مهندسی در رشته‌های مهندسی عمران، معماری، مکانیک، تأسیسات ساختمانی و رشته‌های مرتبط.',
+    },
+    highlights: {
+      en: [
+        "Designed the institute's logo and complete visual identity",
+        'Created booklets, brochures, and course catalogs',
+        'Developed promotional graphics for engineering training programs',
+        'Designed Instagram posts, stories, and educational engineering visual content',
+        'Designed corporate New Year gift packages including calendars, planners, and booklets',
+      ],
+      fa: [
+        'طراحی لوگو و هویت بصری مؤسسه',
+        'طراحی جزوه، بروشور و کاتالوگ',
+        'طراحی اقلام تبلیغاتی دوره‌های آموزشی مهندسی',
+        'طراحی پست و استوری اینستاگرام و توسعه محتوای بصری آموزش‌های مهندسی',
+        'طراحی بسته هدایای سازمانی نوروز، شامل تقویم، پلنر، جزوه و بروشورهای تبلیغاتی',
+      ],
+    },
+    badge: 'Brand & Education',
+    category: 'brand_digital',
+  },
+  {
+    id: 'exp_pransa',
+    company: {
+      en: 'Pransa Cosmetics',
+      fa: 'پرانسا کازمتیکس',
+    },
+    role: {
+      en: '3D Product Illustrator & Exhibition Brochure Designer',
+      fa: 'تصویرساز سه‌بعدی محصولات و طراح بروشور نمایشگاهی',
+    },
+    period: {
+      en: 'December 2024',
+      fa: 'آذر ۱۴۰۳',
+    },
+    location: {
+      en: 'Urmia, Iran',
+      fa: 'ارومیه، ایران',
+    },
+    type: {
+      en: 'Skincare & Personal Care',
+      fa: 'محصولات مراقبت پوست و بهداشت فردی',
+    },
+    summary: {
+      en: 'Developed a product-focused corporate brochure for the brand’s exhibition presence at Iran Mall, presenting a portfolio of skincare and personal care products (Biogenic, Water Gel, sunscreens, anti-spot creams, cleansing foams, toners).',
+      fa: 'طراحی یک بروشور شرکتی با محوریت معرفی محصولات برای حضور نمایشگاهی برند در ایران‌مال شامل محصولات بیوژنیک، واترژل، ضدآفتاب، کرم‌های چندمنظوره ضدلک، فوم‌های شست‌وشوی صورت و تونرهای مراقبت پوست.',
+    },
+    highlights: {
+      en: [
+        'Created detailed 3D illustrations of 22 products',
+        'Reconstructed product components and printed graphics layer by layer',
+        'Developed accurate visualizations including proportions, surfaces, labels, and packaging details',
+        'Designed the complete exhibition brochure in Adobe Illustrator with typographic hierarchy and grid discipline',
+        'Prepared final artwork with rigorous color management and print accuracy',
+      ],
+      fa: [
+        'طراحی و تصویرسازی سه‌بعدی دقیق ۲۲ محصول',
+        'بازسازی لایه‌به‌لایه اجزای محصولات و گرافیک‌های چاپ‌شده روی بسته‌بندی',
+        'بازآفرینی دقیق تناسبات، سطوح، لیبل‌ها و جزئیات بصری محصولات',
+        'طراحی کامل بروشور نمایشگاهی در Adobe Illustrator با گرید تایپوگرافی منسجم',
+        'آماده‌سازی فایل نهایی با توجه به مدیریت رنگ و دقت چاپ',
+      ],
+    },
+    badge: '3D & Exhibition',
+    category: 'packaging_3d',
+    featured: true,
+  },
+  {
+    id: 'exp_urmia_fda',
+    company: {
+      en: 'Urmia Food & Drug Administration',
+      fa: 'معاونت غذا و داروی ارومیه',
+    },
+    role: {
+      en: 'Catalogue Designer',
+      fa: 'طراح کاتالوگ',
+    },
+    period: {
+      en: 'August 2024 – September 2024',
+      fa: 'مرداد تا شهریور ۱۴۰۳',
+    },
+    location: {
+      en: 'Urmia, Iran',
+      fa: 'ارومیه، ایران',
+    },
+    type: {
+      en: 'Medical Equipment & Pharmaceuticals',
+      fa: 'تجهیزات پزشکی و دارویی',
+    },
+    summary: {
+      en: 'Designed and structured a 200-page medical equipment catalog presenting products from 31 medical equipment and pharmaceutical manufacturers based in Urmia.',
+      fa: 'طراحی و صفحه‌آرایی یک کتاب ۲۰۰ صفحه‌ای در حوزه تجهیزات پزشکی که محصولات ۳۱ شرکت تولیدکننده تجهیزات پزشکی و دارویی مستقر در ارومیه را معرفی می‌کرد.',
+    },
+    highlights: {
+      en: [
+        'Designed the overall visual structure and editorial layout for the 200-page publication',
+        'Organized product information across 31 distinct manufacturing companies',
+        'Created a unified presentation system for diverse product categories and technical specs',
+        'Prepared the comprehensive catalog for high-volume commercial print production',
+      ],
+      fa: [
+        'طراحی ساختار بصری و صفحه‌آرایی کلی کتاب ۲۰۰ صفحه‌ای',
+        'سازمان‌دهی اطلاعات محصولات مربوط به ۳۱ شرکت مختلف',
+        'ایجاد ساختار یکپارچه برای معرفی محصولات و دسته‌بندی‌های متنوع',
+        'آماده‌سازی کاتالوگ برای تولید حرفه‌ای در فرآیند چاپ افست',
+      ],
+    },
+    badge: '200-Page Editorial',
+    category: 'editorial_print',
+    featured: true,
+  },
+  {
+    id: 'exp_ofogh_iranian',
+    company: {
+      en: 'Ofogh Iranian Marketing Company',
+      fa: 'شرکت بازاریابی افق ایرانیان',
+    },
+    role: {
+      en: 'Graphic Designer',
+      fa: 'طراح گرافیک',
+    },
+    period: {
+      en: 'December 2023 – July 2024',
+      fa: 'آذر ۱۴۰۲ تا تیر ۱۴۰۳',
+    },
+    location: {
+      en: 'Urmia, Iran',
+      fa: 'ارومیه، ایران',
+    },
+    type: {
+      en: 'Marketing Agency & Brand Strategy',
+      fa: 'آژانس بازاریابی و تبلیغات',
+    },
+    summary: {
+      en: 'Developed visual campaigns, corporate marketing assets, and brand design systems for business clients.',
+      fa: 'طراحی کمپین‌های تبلیغاتی، اقلام گرافیکی بازاریابی و هویت بصری برای کسب‌وکارهای همکار.',
+    },
+    highlights: {
+      en: [
+        'Created multi-channel digital advertising campaigns and print collateral',
+        'Executed brand identity packages and corporate marketing assets',
+        'Maintained visual consistency and design standards across client campaigns',
+      ],
+      fa: [
+        'طراحی کمپین‌های تبلیغاتی دیجیتال و اقلام چاپی',
+        'توسعه بسته‌های هویت بصری و اقلام بازاریابی شرکتی',
+        'حفظ یکپارچگی نشان و استانداردهای طراحی برند',
+      ],
+    },
+    badge: 'Marketing & Campaigns',
+    category: 'brand_digital',
+  },
+  {
+    id: 'exp_urmia_med_uni',
+    company: {
+      en: 'Deputy of Research & Technology, Urmia University of Medical Sciences',
+      fa: 'معاونت تحقیقات و فناوری دانشگاه علوم پزشکی ارومیه',
+    },
+    role: {
+      en: 'Logo Designer',
+      fa: 'طراح لوگو',
+    },
+    period: {
+      en: 'April 2024 – June 2024',
+      fa: 'فروردین تا خرداد ۱۴۰۳',
+    },
+    location: {
+      en: 'Urmia, Iran',
+      fa: 'ارومیه، ایران',
+    },
+    type: {
+      en: 'Healthcare Academia & Innovation',
+      fa: 'سلامت، پژوهش دانشگاهی و فناوری',
+    },
+    summary: {
+      en: 'Designed the official logo and visual emblem for the Deputy of Research and Technology at Urmia University of Medical Sciences.',
+      fa: 'طراحی لوگوی رسمی معاونت تحقیقات و فناوری دانشگاه علوم پزشکی ارومیه.',
+    },
+    highlights: {
+      en: [
+        'Designed the official emblem and typography for the research deputy',
+        'Engineered scalable geometric logo balance suitable for digital and print media',
+        'Delivered official brand mark guidelines for academic publications and stationery',
+      ],
+      fa: [
+        'طراحی نشان اختصاصی و تایپوگرافی رسمی معاونت',
+        'خلق نشان با ساختار هندسی دقیق و قابلیت انطباق در ابعاد گوناگون',
+        'تدوین استانداردهای استفاده از لوگو در مقالات و سربرگ‌های سازمانی',
+      ],
+    },
+    badge: 'Academic Identity',
+    category: 'brand_digital',
+  },
+  {
+    id: 'exp_khayyam_print',
+    company: {
+      en: 'Khayyam Print Office',
+      fa: 'چاپخانه خیام',
+    },
+    role: {
+      en: 'Graphic Designer & Prepress Specialist',
+      fa: 'طراح گرافیک و کارشناس پیش‌ازچاپ',
+    },
+    period: {
+      en: 'January 2022 – March 2024',
+      fa: 'دی ۱۴۰۰ تا اسفند ۱۴۰۲',
+    },
+    location: {
+      en: 'Iran',
+      fa: 'ایران',
+    },
+    type: {
+      en: 'Offset Printing & Packaging Prepress',
+      fa: 'صنعت چاپ افست و بسته‌بندی',
+    },
+    summary: {
+      en: 'Managed prepress production, CMYK color separation, dieline structural preparation, and commercial offset print supervision.',
+      fa: 'فعالیت تخصصی در فرآیندهای لیتوگرافی، چاپ افست، تفکیک رنگ CMYK، طراحی خطوط تیغ و نظارت فنی بر تولید اقلام چاپی تجاری.',
+    },
+    highlights: {
+      en: [
+        'Supervised prepress plate preparation, CMYK screening, and spot Pantone color formulations',
+        'Engineered dieline structures for folding cartons, labels, and promotional materials',
+        'Ensured pressroom production accuracy across large-scale commercial runs',
+      ],
+      fa: [
+        'تنظیم دقیق فایل‌های چاپی، تفکیک رنگ و کنترل ترام و رنگ‌های اسپات پنتون',
+        'طراحی و کنترل خطوط تیغ جعبه‌ها، لیبل‌ها و کاتالوگ‌های چندصفحه‌ای',
+        'حل چالش‌های فنی چاپ و اطمینان از خروجی بی‌نقص در تیراژهای بالا',
+      ],
+    },
+    badge: 'Prepress & Offset',
+    category: 'editorial_print',
+  },
+  {
+    id: 'exp_cic_nowhere',
+    company: {
+      en: 'CIC Nowhere Advertising Agency',
+      fa: 'آژانس تبلیغاتی CIC Nowhere',
+    },
+    role: {
+      en: 'Senior Graphic Designer',
+      fa: 'طراح ارشد گرافیک',
+    },
+    period: {
+      en: 'September 2023 – November 2023',
+      fa: 'شهریور تا آبان ۱۴۰۲',
+    },
+    location: {
+      en: 'Tehran, Iran',
+      fa: 'تهران، ایران',
+    },
+    type: {
+      en: 'Creative Advertising & Brand Strategy',
+      fa: 'آژانس تبلیغات خلاق و استراتژی برند',
+    },
+    summary: {
+      en: 'Collaborated on logo design and visual identity systems for specialized business units and brands across diverse sectors.',
+      fa: 'همکاری در طراحی لوگو و توسعه هویت بصری برای چند واحد تجاری تخصصی و برندهای فعال در حوزه‌های مختلف.',
+    },
+    highlights: {
+      en: [
+        'Designed brand mark for a specialized cryptocurrency group',
+        'Designed brand logo for a marketing business unit',
+        'Designed brand mark for a software development and programming unit',
+        'Designed logo for a graphic design studio unit',
+        'Developed tailored visual identities matching market positioning for each entity',
+      ],
+      fa: [
+        'طراحی لوگو برای یک گروه فعال در حوزه رمزارز',
+        'طراحی لوگو برای یک واحد بازاریابی',
+        'طراحی لوگو برای یک واحد برنامه‌نویسی و توسعه نرم‌افزار',
+        'طراحی لوگو برای یک واحد طراحی گرافیک',
+        'توسعه هویت‌های بصری متناسب با جایگاه و حوزه فعالیت هر مجموعه',
+      ],
+    },
+    badge: 'Brand Systems',
+    category: 'brand_digital',
+  },
+  {
+    id: 'exp_behrad',
+    company: {
+      en: 'Behrad Advertising Complex',
+      fa: 'مجموعه تبلیغاتی به‌راد',
+    },
+    role: {
+      en: 'Graphic Designer',
+      fa: 'طراح گرافیک',
+    },
+    period: {
+      en: 'March 2020 – March 2023',
+      fa: 'اسفند ۱۳۹۸ تا اسفند ۱۴۰۱',
+    },
+    location: {
+      en: 'Iran',
+      fa: 'ایران',
+    },
+    type: {
+      en: 'Advertising & Commercial Printing',
+      fa: 'چاپ و تبلیغات جامع',
+    },
+    summary: {
+      en: 'Delivered extensive corporate print collateral, brand identities, and commercial promotional designs over 3 continuous years.',
+      fa: 'طراحی پروژه‌های تبلیغاتی، کاتالوگ‌های شرکتی، هویت برند، اوراق اداری و اقلام بصری محیطی و نمایشگاهی در طول ۳ سال همکاری پیوسته.',
+    },
+    highlights: {
+      en: [
+        'Designed corporate catalogs, flyers, and advertising media for industrial enterprises',
+        'Created custom stationery packages, luxury business cards, and corporate gift collateral',
+        'Coordinated visual quality from concept ideation to print shop delivery',
+      ],
+      fa: [
+        'طراحی ده‌ها کاتالوگ و بروشور تبلیغاتی برای صنایع و شرکت‌های تجاری',
+        'طراحی کارت‌های ویزیت خاص، سربرگ‌ها و اقلام اداری لوکس',
+        'نظارت و هماهنگی در کلیه مراحل طراحی تا تحویل خروجی چاپی',
+      ],
+    },
+    badge: 'Commercial Print',
+    category: 'editorial_print',
+  },
+  {
+    id: 'exp_rst',
     company: {
       en: 'RST Purchasing',
       fa: 'آر‌اس‌تی پرچسینگ (RST Purchasing)',
@@ -604,7 +998,7 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
       fa: 'مدیر هنری و مسئول ارتباطات بصری صنعتی',
     },
     period: {
-      en: '2023 - Present',
+      en: '2023 – Present',
       fa: '۱۴۰۲ - اکنون',
     },
     location: {
@@ -632,9 +1026,11 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
       ],
     },
     badge: 'B2B & Industrial',
+    category: 'editorial_print',
+    featured: true,
   },
   {
-    id: 'exp_2',
+    id: 'exp_maral',
     company: {
       en: 'Maral Trailer',
       fa: 'شرکت صنعتی مارال تریلر (Maral Trailer)',
@@ -644,7 +1040,7 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
       fa: 'مدیر هنری و مشاور تولید محتوای ویدئویی محصول',
     },
     period: {
-      en: '2023 - 2024',
+      en: '2023 – 2024',
       fa: '۱۴۰۲ - ۱۴۰۳',
     },
     location: {
@@ -663,7 +1059,7 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
       en: [
         'Achieved 310,000+ views, 11,000+ likes on flagship ASMR trailer product video',
         'Integrated generative AI tools into pre-visualization and cinematic promo video production',
-        'Designed international exhibition sales collateral and international media presentations',
+        'Designed international exhibition sales collateral and media presentations',
       ],
       fa: [
         'ثبت رکورد بیش از ۳۱۰ هزار بازدید ارگانیک و ۱۱ هزار لایک در ویدئوی شاخص ASMR محصول',
@@ -672,9 +1068,10 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
       ],
     },
     badge: 'Manufacturing & Motion',
+    category: 'brand_digital',
   },
   {
-    id: 'exp_3',
+    id: 'exp_spoota',
     company: {
       en: 'Spoota Industrial Group',
       fa: 'گروه صنعتی اسپوتا (Spoota Industrial Holding)',
@@ -684,7 +1081,7 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
       fa: 'طراح ارشد برند، گرافیک سازمانی و محیطی',
     },
     period: {
-      en: '2022 - 2023',
+      en: '2022 – 2023',
       fa: '۱۴۰۱ - ۱۴۰۲',
     },
     location: {
@@ -712,9 +1109,10 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
       ],
     },
     badge: 'Corporate & Packaging',
+    category: 'packaging_3d',
   },
   {
-    id: 'exp_4',
+    id: 'exp_nuve',
     company: {
       en: 'The Nuve Beauty Atelier',
       fa: 'برند آرایشی و زیبایی دِ نووه (The Nuve)',
@@ -724,7 +1122,7 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
       fa: 'طراح بسته‌بندی و مشاور دیزاین برند',
     },
     period: {
-      en: '2023 - 2024',
+      en: '2023 – 2024',
       fa: '۱۴۰۲ - ۱۴۰۳',
     },
     location: {
@@ -752,45 +1150,130 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
       ],
     },
     badge: 'Luxury Packaging',
+    category: 'packaging_3d',
   },
   {
-    id: 'exp_5',
+    id: 'exp_urmia_municipality',
     company: {
-      en: 'Independent Art Direction & Design Studio',
-      fa: 'استودیو دیزاین و پروژه‌های مستقل سعید جباری',
+      en: 'Municipality of Urmia',
+      fa: 'شهرداری ارومیه',
     },
     role: {
-      en: 'Independent Art Director & Brand Consultant',
-      fa: 'مدیر هنری و مشاور مستقل برندسازی',
+      en: 'Civil Engineer',
+      fa: 'مهندس عمران',
     },
     period: {
-      en: '2014 - Present',
-      fa: '۱۳۹۳ - اکنون (۱۰+ سال سابقه)',
+      en: 'December 2018 – February 2020',
+      fa: 'آذر ۱۳۹۷ تا بهمن ۱۳۹۸',
     },
     location: {
-      en: 'Worldwide Remote / Tehran',
-      fa: 'پروژه‌های سراسری و بین‌المللی',
+      en: 'Urmia, Iran',
+      fa: 'ارومیه، ایران',
     },
     type: {
-      en: 'Consultancy & Design Practice',
-      fa: 'خدمات استراتژیک هویت بصری، بسته‌بندی و وب',
+      en: 'Municipal Infrastructure & Public Works',
+      fa: 'پروژه‌های عمرانی شهری و نظارت',
     },
     summary: {
-      en: 'Partnering directly with business founders, marketing directors, and creative agencies on high-stakes brand identities, industrial catalogs, packaging architectures, and digital product communications.',
-      fa: 'همکاری مستقیم با بنیان‌گذاران، مدیران بازاریابی و آژانس‌های خلاق جهت بازطراحی هویت‌های سازمانی، کاتالوگ‌های چندصفحه‌ای، پکیج‌های غرفه‌سازی نمایشگاهی و وب‌اپلیکیشن‌های اختصاصی.',
+      en: 'Supervised municipal infrastructure projects, inspected architectural and structural drawings, and ensured engineering compliance.',
+      fa: 'نظارت و مدیریت پروژه‌های عمرانی، کنترل نقشه‌ها، هماهنگی‌های فنی و ارزیابی کیفیت اجرای پروژه‌های زیرساختی شهری.',
     },
     highlights: {
       en: [
-        'Over 140 successfully delivered visual identity, packaging, and digital projects',
-        'Brings Civil Engineering problem-solving rigor to creative brand systems',
-        'End-to-end guidance from strategic discovery to factory production verification',
+        'Reviewed structural execution blueprints and regulatory code compliance',
+        'Supervised municipal engineering teams on site across urban construction milestones',
+        'Coordinated technical communications between contractors and municipal authorities',
       ],
       fa: [
-        'بیش از ۱۴۰ پروژه اجرا شده در حوزه‌های برندینگ، کاتالوگ و بسته‌بندی',
-        'به‌کارگیری تفکر حل‌مسئله و درک فنی نشأت‌گرفته از تحصیلات مهندسی عمران',
-        'همراهی کارفرما از شکل‌گیری کانسپت تا نظارت در چاپخانه و خطوط تولید',
+        'کنترل و بازبینی نقشه‌های اجرایی و انطباق با ضوابط فنی',
+        'نظارت میدانی بر روند ساخت و اجرای پروژه‌های شهری',
+        'هماهنگی میان پیمانکاران، ناظران و کارفرمایان دولتی',
       ],
     },
-    badge: 'Studio Practice',
+    badge: 'Civil Engineering',
+    category: 'civil_engineering',
+  },
+  {
+    id: 'exp_nasb_niroo',
+    company: {
+      en: 'Nasb Niroo Company',
+      fa: 'شرکت نصب نیرو',
+    },
+    role: {
+      en: 'Civil Engineer',
+      fa: 'مهندس عمران',
+    },
+    period: {
+      en: 'September 2016 – December 2018',
+      fa: 'شهریور ۱۳۹۵ تا آذر ۱۳۹۷',
+    },
+    location: {
+      en: 'Ardabil, Iran',
+      fa: 'اردبیل، ایران',
+    },
+    type: {
+      en: 'Power Plant Construction & Heavy Energy Projects',
+      fa: 'احداث نیروگاه و صنایع انرژی',
+    },
+    summary: {
+      en: 'Contributed to heavy industrial power plant construction, overseeing heavy concrete/steel structures and structural quality control.',
+      fa: 'فعالیت در پروژه‌های احداث نیروگاه، نظارت بر سازه‌های سنگین بتنی و فلزی، کنترل مشخصات فنی و هماهنگی کارگاه‌های صنعتی.',
+    },
+    highlights: {
+      en: [
+        'Oversaw quality control for high-volume concrete pours and industrial foundations',
+        'Evaluated structural steel shop drawings and technical assembly schematics',
+        'Managed on-site engineering reporting and workflow coordination',
+      ],
+      fa: [
+        'کنترل کیفی و آزمایشگاهی بتن‌ریزی‌های حجیم و سازه‌های نیروگاهی',
+        'بررسی و انطباق نقشه‌های شاپ‌دراویینگ اسکلت فلزی',
+        'همکاری در برنامه‌ریزی زمان‌بندی و مدیریت کارگاه ساخت',
+      ],
+    },
+    badge: 'Power Plant Engineering',
+    category: 'civil_engineering',
+  },
+  {
+    id: 'exp_ministry_energy',
+    company: {
+      en: 'Ministry of Energy, Iran',
+      fa: 'وزارت نیرو',
+    },
+    role: {
+      en: 'Civil Engineer',
+      fa: 'مهندس عمران',
+    },
+    period: {
+      en: 'April 2015 – September 2016',
+      fa: 'فروردین ۱۳۹۴ تا شهریور ۱۳۹۵',
+    },
+    location: {
+      en: 'Saqqez, Iran',
+      fa: 'سقز، ایران',
+    },
+    type: {
+      en: 'Dam Construction & Water Resources',
+      fa: 'پروژه‌های سدسازی و منابع آب',
+    },
+    summary: {
+      en: 'Participated in national hydraulic and water infrastructure projects, reviewing topographic surveys, geotechnical reports, and civil engineering specifications.',
+      fa: 'همکاری در پروژه‌های عمرانی مدیریت منابع آب، سدسازی و تأسیسات هیدرولیکی، ارزیابی نقشه‌های توپوگرافی و کنترل فنی ابنیه.',
+    },
+    highlights: {
+      en: [
+        'Analyzed topographic surveys and computational models for hydraulic structures',
+        'Supervised soil mechanics and concrete test protocols for dam infrastructure',
+        'Prepared analytical engineering reports and progress documentation for ministry boards',
+      ],
+      fa: [
+        'تحلیل نقشه‌های توپوگرافی و نقشه‌های محاسباتی سازه‌های هیدرولیکی',
+        'نظارت بر آزمایش‌های مکانیک خاک و بتن در کارگاه سد',
+        'تهیه گزارش‌های فنی ادواری جهت ارائه به مراجع کارفرمایی',
+      ],
+    },
+    badge: 'Dam & Hydraulics',
+    category: 'civil_engineering',
   },
 ];
+

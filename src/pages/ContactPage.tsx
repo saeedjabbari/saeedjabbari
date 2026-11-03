@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, Copy, ExternalLink, Mail, MapPin, MessageSquare, Send, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, Copy, ExternalLink, Eye, EyeOff, Mail, MapPin, MessageCircle, MessageSquare, Phone, Send, Sparkles } from 'lucide-react';
 import { PROFILE_DATA } from '../data/portfolioData';
 import { Language, PageId } from '../types';
 
@@ -24,6 +24,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
 
   const [submitted, setSubmitted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedPhone, setCopiedPhone] = useState(false);
+  const [isPhoneRevealed, setIsPhoneRevealed] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,9 +34,15 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
   };
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText('contact@saeedjabbari.com');
+    navigator.clipboard.writeText(PROFILE_DATA.links.email);
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2000);
+  };
+
+  const handleCopyPhone = () => {
+    navigator.clipboard.writeText(PROFILE_DATA.links.phone);
+    setCopiedPhone(true);
+    setTimeout(() => setCopiedPhone(false), 2000);
   };
 
   return (
@@ -63,6 +71,96 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Contact Info & Channels (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
+          {/* Direct Phone & Instant Messaging Card (Hidden by default, Icon-First) */}
+          <div className="bg-white rounded-xl sm:rounded-2xl border border-neutral-200/80 p-5 sm:p-7 shadow-xs space-y-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-neutral-400 font-display uppercase tracking-wider block">
+                {lang === 'en' ? 'Direct Line & Instant Channels' : 'ارتباط سریع و پیام‌رسان‌ها'}
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-display">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                {lang === 'en' ? 'Available' : 'در دسترس'}
+              </span>
+            </div>
+
+            {/* Masked / Protected Phone Display */}
+            <div className="p-3.5 bg-neutral-50 rounded-xl border border-neutral-200/70 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-amber-500/10 text-amber-700 flex items-center justify-center">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold text-neutral-400 block uppercase tracking-wider font-display">
+                    {lang === 'en' ? 'Direct Mobile' : 'شماره تماس مستقیم'}
+                  </span>
+                  <span className="text-sm sm:text-base font-black font-mono text-neutral-900 tracking-wider" dir="ltr">
+                    {isPhoneRevealed ? PROFILE_DATA.links.phoneFormatted : '+98 914 ••• ••53'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setIsPhoneRevealed((prev) => !prev)}
+                  className="p-2 rounded-lg bg-white border border-neutral-200 hover:bg-neutral-100 text-neutral-600 transition-colors cursor-pointer"
+                  title={isPhoneRevealed ? (lang === 'en' ? 'Hide digits' : 'مخفی‌سازی') : (lang === 'en' ? 'Reveal number' : 'نمایش شماره')}
+                >
+                  {isPhoneRevealed ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCopyPhone}
+                  className="p-2 rounded-lg bg-white border border-neutral-200 hover:bg-neutral-100 text-neutral-600 transition-colors cursor-pointer"
+                  title={copiedPhone ? (lang === 'en' ? 'Copied' : 'کپی شد') : (lang === 'en' ? 'Copy number' : 'کپی شماره')}
+                >
+                  {copiedPhone ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Direct One-Click Icon Action Channels */}
+            <div className="space-y-2">
+              <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider font-display block">
+                {lang === 'en' ? 'Quick Actions' : 'شروع سریع ارتباط'}
+              </span>
+
+              <div className="grid grid-cols-3 gap-2.5">
+                <a
+                  href={`tel:${PROFILE_DATA.links.phone}`}
+                  className="p-3 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 text-center group shadow-2xs"
+                  title={lang === 'en' ? 'Call Directly' : 'تماس مستقیم تلفنی'}
+                >
+                  <Phone className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-bold">{lang === 'en' ? 'Call' : 'تماس'}</span>
+                </a>
+
+                <a
+                  href={PROFILE_DATA.links.whatsapp}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 text-center group shadow-2xs"
+                  title="WhatsApp"
+                >
+                  <MessageCircle className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-bold">WhatsApp</span>
+                </a>
+
+                <a
+                  href={PROFILE_DATA.links.telegram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 text-center group shadow-2xs"
+                  title="Telegram"
+                >
+                  <Send className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-bold">Telegram</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
           {/* Quick Email Card */}
           <div className="bg-white rounded-xl sm:rounded-2xl border border-neutral-200/80 p-5 sm:p-7 shadow-xs space-y-4">
             <span className="text-xs font-bold text-neutral-400 font-display uppercase tracking-wider block">
@@ -70,10 +168,10 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
             </span>
             <div className="space-y-1">
               <a
-                href="mailto:contact@saeedjabbari.com"
+                href={`mailto:${PROFILE_DATA.links.email}`}
                 className="text-base sm:text-lg font-black text-neutral-950 hover:text-amber-600 transition-colors font-display block"
               >
-                contact@saeedjabbari.com
+                {PROFILE_DATA.links.email}
               </a>
               <span className="text-xs text-neutral-500 font-medium block">
                 {lang === 'en' ? 'Inquiries usually answered within 24 hours' : 'پاسخگویی به استعلام‌ها ظرف حداکثر ۲۴ ساعت'}

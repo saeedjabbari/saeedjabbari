@@ -150,6 +150,8 @@ export const ArticlesPage: React.FC<ArticlesPageProps> = ({
             src={selectedArticle.coverImage}
             alt={selectedArticle.title[lang]}
             className="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
         </div>
 
@@ -524,6 +526,8 @@ export const ArticlesPage: React.FC<ArticlesPageProps> = ({
                     src={article.coverImage}
                     alt={article.title[lang]}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute top-3 right-3">
                     <span className="px-3 py-1 bg-neutral-950/80 backdrop-blur-md text-white text-[11px] font-bold rounded-full">

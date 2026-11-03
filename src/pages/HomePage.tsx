@@ -1,5 +1,4 @@
-import React from 'react';
-import { ArrowLeft, ArrowUpRight, ArrowRight, Layers, Sparkles, Building2, Package, Compass, CheckCircle2, Award, ExternalLink, BookOpen, Clock } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, ArrowRight, Layers, Sparkles, Building2, Package, Compass, CheckCircle2, Award, ExternalLink, BookOpen, Clock, Phone, MessageCircle, Send } from 'lucide-react';
 import { PROFILE_DATA, PROJECTS_DATA, AREAS_OF_EXPERTISE, EXPERIENCE_DATA } from '../data/portfolioData';
 import { ARTICLES_DATA } from '../data/articlesData';
 import { ArticleItem, Language, PageId, ProjectItem } from '../types';
@@ -172,6 +171,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                   alt={project.title[lang]}
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-neutral-950 shadow-sm group-hover:bg-neutral-950 group-hover:text-white transition-all">
                   <ArrowUpRight className="w-4 h-4" />
@@ -393,6 +394,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                     src={article.coverImage}
                     alt={article.title[lang]}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute top-3 right-3">
                     <span className="px-3 py-1 bg-neutral-950/80 backdrop-blur-md text-white text-[11px] font-bold rounded-full">
@@ -450,18 +453,54 @@ export const HomePage: React.FC<HomePageProps> = ({
             </p>
           </div>
 
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={() => onNavigate('contact')}
-              className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-neutral-100 text-neutral-950 font-black text-sm sm:text-base rounded-full shadow-lg transition-all cursor-pointer"
+              className="px-8 py-4 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black text-sm sm:text-base rounded-full shadow-lg transition-all cursor-pointer flex items-center gap-2"
             >
-              {lang === 'en' ? 'Discuss a Project' : 'شروع گفتگو درباره پروژه'}
+              <span>{lang === 'en' ? 'Discuss a Project' : 'ارتباط و شروع همکاری'}</span>
+              <ArrowIcon className="w-4 h-4 text-neutral-950" />
             </button>
+
+            {/* Direct Action Icons */}
+            <div className="flex items-center gap-2">
+              <a
+                href={`tel:${PROFILE_DATA.links.phone}`}
+                className="w-12 h-12 rounded-full bg-white/10 hover:bg-amber-500 hover:text-neutral-950 text-white flex items-center justify-center border border-white/20 transition-all cursor-pointer shadow-md group"
+                title={lang === 'en' ? 'Direct Phone Call' : 'تماس تلفنی'}
+                aria-label="Direct Phone Call"
+              >
+                <Phone className="w-5 h-5 text-neutral-200 group-hover:text-neutral-950" />
+              </a>
+
+              <a
+                href={PROFILE_DATA.links.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 rounded-full bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center border border-white/20 transition-all cursor-pointer shadow-md group"
+                title="WhatsApp"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle className="w-5 h-5 text-neutral-200 group-hover:text-white" />
+              </a>
+
+              <a
+                href={PROFILE_DATA.links.telegram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 rounded-full bg-white/10 hover:bg-sky-500 text-white flex items-center justify-center border border-white/20 transition-all cursor-pointer shadow-md group"
+                title="Telegram"
+                aria-label="Telegram"
+              >
+                <Send className="w-4 h-4 text-neutral-200 group-hover:text-white" />
+              </a>
+            </div>
+
             <a
               href={PROFILE_DATA.links.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-7 py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-base rounded-full border border-white/20 transition-all flex items-center justify-center gap-2"
+              className="px-6 py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-base rounded-full border border-white/20 transition-all flex items-center justify-center gap-2"
             >
               <span>LinkedIn</span>
               <ExternalLink className="w-4 h-4 opacity-70" />

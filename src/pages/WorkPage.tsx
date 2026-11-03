@@ -300,6 +300,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({
                 alt={project.title[lang]}
                 className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                 referrerPolicy="no-referrer"
+                loading="lazy"
+                decoding="async"
               />
               <div className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-neutral-950 shadow-sm group-hover:bg-neutral-950 group-hover:text-white transition-all">
                 <ArrowUpRight className="w-4 h-4" />
