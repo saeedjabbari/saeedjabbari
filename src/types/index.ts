@@ -1,6 +1,6 @@
 export type Language = 'en' | 'fa';
 
-export type PageId = 'home' | 'work' | 'about' | 'experience' | 'contact';
+export type PageId = 'home' | 'work' | 'about' | 'experience' | 'articles' | 'contact';
 
 export type ProjectCategory =
   | 'brand_identity'
@@ -49,3 +49,26 @@ export interface AreaOfExpertise {
   description: { en: string; fa: string };
   skills: { en: string[]; fa: string[] };
 }
+
+export interface ArticleSection {
+  heading: { en: string; fa: string };
+  paragraphs: { en: string[]; fa: string[] };
+  keyTakeaway?: { en: string; fa: string };
+}
+
+export interface ArticleItem {
+  id: string;
+  slug: string;
+  title: { en: string; fa: string };
+  subtitle: { en: string; fa: string };
+  category: 'packaging' | 'industrial_b2b' | 'ai_methodology' | 'brand_strategy' | 'technical_print';
+  categoryLabel: { en: string; fa: string };
+  publishedDate: { en: string; fa: string };
+  readTime: { en: string; fa: string };
+  featured: boolean;
+  coverImage: string;
+  tags: { en: string[]; fa: string[] };
+  sections: ArticleSection[];
+  quote?: { en: string; fa: string };
+}
+

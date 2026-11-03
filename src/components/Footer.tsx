@@ -25,6 +25,7 @@ export const Footer: React.FC<FooterProps> = ({
     { id: 'work', labelEn: 'Selected Work', labelFa: 'پروژه‌های شاخص' },
     { id: 'about', labelEn: 'About & Philosophy', labelFa: 'درباره من و رویکرد طراحی' },
     { id: 'experience', labelEn: 'Experience & Career', labelFa: 'سوابق و مجموعه‌ها' },
+    { id: 'articles', labelEn: 'Articles & Research', labelFa: 'مقالات و پژوهش‌ها' },
     { id: 'contact', labelEn: 'Contact & Inquiries', labelFa: 'تماس و مشاوره' },
   ];
 

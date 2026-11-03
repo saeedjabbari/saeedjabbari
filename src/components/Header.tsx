@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X, ArrowUpRight, Globe, ExternalLink } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Globe } from 'lucide-react';
 import { PROFILE_DATA } from '../data/portfolioData';
 import { Language, PageId } from '../types';
 
@@ -23,6 +23,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'work', labelEn: 'Selected Work', labelFa: 'پروژه‌ها' },
     { id: 'about', labelEn: 'About', labelFa: 'درباره من' },
     { id: 'experience', labelEn: 'Experience', labelFa: 'سوابق کاری' },
+    { id: 'articles', labelEn: 'Articles & Research', labelFa: 'مقالات' },
     { id: 'contact', labelEn: 'Contact', labelFa: 'تماس' },
   ];
 
@@ -88,27 +89,6 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="font-display uppercase tracking-wider">{lang === 'en' ? 'FA' : 'EN'}</span>
             </button>
 
-            {/* Social Links (Hidden on small mobile) */}
-            <a
-              href={PROFILE_DATA.links.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 rounded-full transition-colors"
-            >
-              <span>LinkedIn</span>
-              <ExternalLink className="w-3 h-3 opacity-60" />
-            </a>
-
-            <a
-              href={PROFILE_DATA.links.behance}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 rounded-full transition-colors"
-            >
-              <span>Behance</span>
-              <ExternalLink className="w-3 h-3 opacity-60" />
-            </a>
-
             {/* Primary Action Button */}
             <button
               onClick={() => handleNavClick('contact')}
@@ -161,32 +141,11 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="pt-8 border-t border-neutral-100 space-y-4">
             <button
               onClick={() => handleNavClick('contact')}
-              className="w-full py-4 bg-amber-600 text-white font-black rounded-2xl shadow-md flex items-center justify-center gap-2"
+              className="w-full py-4 bg-amber-600 hover:bg-amber-700 text-white font-black rounded-2xl shadow-md flex items-center justify-center gap-2 cursor-pointer transition-colors"
             >
               <span>{lang === 'en' ? 'Discuss a Project — Let’s Talk' : 'شروع همکاری — درباره یک پروژه صحبت کنیم'}</span>
               <ArrowUpRight className="w-4 h-4" />
             </button>
-
-            <div className="grid grid-cols-2 gap-3 text-xs font-bold text-center">
-              <a
-                href={PROFILE_DATA.links.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="py-3 bg-neutral-100 rounded-xl text-neutral-800 flex items-center justify-center gap-1.5"
-              >
-                <span>LinkedIn</span>
-                <ExternalLink className="w-3.5 h-3.5 text-neutral-500" />
-              </a>
-              <a
-                href={PROFILE_DATA.links.behance}
-                target="_blank"
-                rel="noreferrer"
-                className="py-3 bg-neutral-100 rounded-xl text-neutral-800 flex items-center justify-center gap-1.5"
-              >
-                <span>Behance</span>
-                <ExternalLink className="w-3.5 h-3.5 text-neutral-500" />
-              </a>
-            </div>
           </div>
         </div>
       )}

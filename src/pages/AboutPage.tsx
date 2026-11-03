@@ -100,7 +100,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ lang, onNavigate }) => {
             </div>
             <div className="flex items-center gap-2 bg-neutral-50 px-4 py-2.5 rounded-2xl border border-neutral-100">
               <Compass className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>{lang === 'en' ? 'B.Sc. Civil Engineering' : 'کارشناسی مهندسی عمران'}</span>
+              <span>{lang === 'en' ? 'M.Sc. Civil Engineering' : 'کارشناسی ارشد مهندسی عمران'}</span>
             </div>
             <div className="flex items-center gap-2 bg-neutral-50 px-4 py-2.5 rounded-2xl border border-neutral-100">
               <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />

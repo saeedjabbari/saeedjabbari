@@ -1,18 +1,21 @@
 import React from 'react';
-import { ArrowLeft, ArrowUpRight, ArrowRight, Layers, Sparkles, Building2, Package, Compass, CheckCircle2, Award, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, ArrowRight, Layers, Sparkles, Building2, Package, Compass, CheckCircle2, Award, ExternalLink, BookOpen, Clock } from 'lucide-react';
 import { PROFILE_DATA, PROJECTS_DATA, AREAS_OF_EXPERTISE, EXPERIENCE_DATA } from '../data/portfolioData';
-import { Language, PageId, ProjectItem } from '../types';
+import { ARTICLES_DATA } from '../data/articlesData';
+import { ArticleItem, Language, PageId, ProjectItem } from '../types';
 
 interface HomePageProps {
   lang: Language;
   onNavigate: (page: PageId) => void;
   onSelectProject: (project: ProjectItem) => void;
+  onSelectArticle?: (article: ArticleItem) => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
   lang,
   onNavigate,
   onSelectProject,
+  onSelectArticle,
 }) => {
   const isFa = lang === 'fa';
   const ArrowIcon = isFa ? ArrowLeft : ArrowRight;
@@ -347,6 +350,85 @@ export const HomePage: React.FC<HomePageProps> = ({
                 {exp.summary[lang]}
               </p>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 5.5 FEATURED ARTICLES & RESEARCH */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div className="space-y-1">
+            <span className="text-xs font-bold text-neutral-400 font-display uppercase tracking-wider">
+              {lang === 'en' ? 'Knowledge & Engineering Insights' : 'یادداشت‌ها و پژوهش‌های تحلیلی'}
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-neutral-950 tracking-tight">
+              {lang === 'en' ? 'Articles & Technical Field Notes' : 'مقالات و پژوهش‌های دیزاین'}
+            </h2>
+          </div>
+          <button
+            onClick={() => onNavigate('articles')}
+            className="text-xs sm:text-sm font-bold text-neutral-900 hover:text-amber-600 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>{lang === 'en' ? 'Explore All Articles' : 'مشاهده همه مقالات و پژوهش‌ها'}</span>
+            <ArrowIcon className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {ARTICLES_DATA.slice(0, 3).map((article) => (
+            <article
+              key={article.id}
+              onClick={() => {
+                if (onSelectArticle) {
+                  onSelectArticle(article);
+                } else {
+                  onNavigate('articles');
+                }
+              }}
+              className="bg-white rounded-2xl border border-neutral-200/80 hover:border-neutral-400 transition-all shadow-xs hover:shadow-md overflow-hidden flex flex-col justify-between group cursor-pointer"
+            >
+              <div className="space-y-4">
+                <div className="aspect-16/10 overflow-hidden bg-neutral-100 relative">
+                  <img
+                    src={article.coverImage}
+                    alt={article.title[lang]}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 right-3">
+                    <span className="px-3 py-1 bg-neutral-950/80 backdrop-blur-md text-white text-[11px] font-bold rounded-full">
+                      {article.categoryLabel[lang]}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-5 sm:p-6 space-y-2.5">
+                  <div className="flex items-center gap-2 text-xs font-bold text-neutral-500">
+                    <Clock className="w-3.5 h-3.5 text-amber-600" />
+                    <span>{article.readTime[lang]}</span>
+                    <span>•</span>
+                    <span>{article.publishedDate[lang]}</span>
+                  </div>
+
+                  <h3 className="text-base sm:text-lg font-black text-neutral-950 group-hover:text-amber-600 transition-colors line-clamp-2 leading-snug">
+                    {article.title[lang]}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-neutral-600 line-clamp-2 leading-relaxed font-medium">
+                    {article.subtitle[lang]}
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 sm:p-6 pt-0 border-t border-neutral-100 mt-2 flex items-center justify-between">
+                <span className="text-xs font-black text-neutral-900 group-hover:text-amber-600 transition-colors inline-flex items-center gap-1.5">
+                  <span>{lang === 'en' ? 'Read Analysis' : 'مطالعه یادداشت'}</span>
+                  <ArrowIcon className="w-3.5 h-3.5" />
+                </span>
+                <span className="text-[11px] font-bold text-neutral-400">
+                  #{article.tags[lang][0]}
+                </span>
+              </div>
+            </article>
           ))}
         </div>
       </section>

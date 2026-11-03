@@ -5,13 +5,15 @@ import { HomePage } from './pages/HomePage';
 import { WorkPage } from './pages/WorkPage';
 import { AboutPage } from './pages/AboutPage';
 import { ExperiencePage } from './pages/ExperiencePage';
+import { ArticlesPage } from './pages/ArticlesPage';
 import { ContactPage } from './pages/ContactPage';
-import { Language, PageId, ProjectItem } from './types';
+import { ArticleItem, Language, PageId, ProjectItem } from './types';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('en');
   const [currentPage, setCurrentPage] = useState<PageId>('home');
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<ArticleItem | null>(null);
 
   // Sync document direction and language code with current language state
   useEffect(() => {
@@ -22,12 +24,19 @@ export default function App() {
   const handleNavigate = (page: PageId) => {
     setCurrentPage(page);
     setSelectedProject(null);
+    setSelectedArticle(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectProjectFromAnywhere = (project: ProjectItem) => {
     setSelectedProject(project);
     setCurrentPage('work');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSelectArticleFromAnywhere = (article: ArticleItem) => {
+    setSelectedArticle(article);
+    setCurrentPage('articles');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -55,6 +64,7 @@ export default function App() {
             lang={lang}
             onNavigate={handleNavigate}
             onSelectProject={handleSelectProjectFromAnywhere}
+            onSelectArticle={handleSelectArticleFromAnywhere}
           />
         )}
 
@@ -78,6 +88,15 @@ export default function App() {
           <ExperiencePage
             lang={lang}
             onNavigate={handleNavigate}
+          />
+        )}
+
+        {currentPage === 'articles' && (
+          <ArticlesPage
+            lang={lang}
+            onNavigate={handleNavigate}
+            selectedArticle={selectedArticle}
+            onSelectArticle={setSelectedArticle}
           />
         )}
 
