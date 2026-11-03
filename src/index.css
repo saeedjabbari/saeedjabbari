@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Vazirmatn', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #FAFAFA;
+    color: #09090B;
+    overflow-x: hidden;
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-sans);
+}
+
+/* Subtle modern scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E4E4E7;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D4D4D8;
+}
+
+/* Ultra-modern smooth cards */
+.sleek-card {
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 640px) {
+  .sleek-card {
+    border-radius: 24px;
+  }
+}
+
+.sleek-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+}
+
+/* Organic notch effect with smooth curved corner */
+.organic-notch-btn {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.organic-notch-btn:hover {
+  transform: scale(1.08) rotate(45deg);
+}
