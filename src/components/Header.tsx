@@ -52,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
                 {PROFILE_DATA.name[lang]}
               </span>
               <span className="text-[10px] font-display font-medium text-neutral-500 tracking-wider uppercase whitespace-nowrap">
-                {lang === 'en' ? 'Art Director & Brand Designer' : 'مدیر هنری و طراح برند'}
+                {lang === 'en' ? 'Art & Creative Director' : 'مدیر هنری و خلاقیت'}
               </span>
             </div>
           </button>

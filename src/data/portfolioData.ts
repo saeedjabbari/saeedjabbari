@@ -6,8 +6,8 @@ export const PROFILE_DATA = {
     fa: 'سعید جباری',
   },
   title: {
-    en: 'Art Director & Brand Designer',
-    fa: 'مدیر هنری و طراح برند',
+    en: 'Brand Identity Systems, Packaging Engineering & Product Communication',
+    fa: 'طراحی هویت بصری، مهندسی بسته‌بندی و ارتباطات برند',
   },
   tagline: {
     en: 'Visual Identity · Packaging Design · Product Communication · Industrial & B2B Visual Systems',

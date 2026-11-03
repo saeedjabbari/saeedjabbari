@@ -168,14 +168,14 @@ export const ArticlesPage: React.FC<ArticlesPageProps> = ({
                 <h4 className="text-sm sm:text-base font-black text-neutral-950">
                   {lang === 'en' ? 'Saeed Jabbari' : 'سعید جباری'}
                 </h4>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-neutral-200 text-neutral-800">
-                  {lang === 'en' ? 'M.Sc. Civil Engineering' : 'فوق لیسانس مهندسی عمران'}
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+                  {lang === 'en' ? 'Art & Creative Director' : 'مدیر هنری و خلاقیت'}
                 </span>
               </div>
               <p className="text-xs text-neutral-500 font-medium">
                 {lang === 'en'
-                  ? 'Art Director & Brand Designer · Visual Systems Specialist'
-                  : 'مدیر هنری و طراح برند · متخصص سیستم‌های بصری و بسته‌بندی'}
+                  ? 'Visual Identity Systems, Packaging Engineering & Product Communication'
+                  : 'سیستم‌های هویت بصری، مهندسی بسته‌بندی و ارتباطات برند'}
               </p>
             </div>
           </div>

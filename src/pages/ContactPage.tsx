@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, Copy, ExternalLink, Eye, EyeOff, Mail, MapPin, MessageCircle, MessageSquare, Phone, Send, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, Copy, ExternalLink, Mail, MapPin, MessageCircle, MessageSquare, Phone, Send, Sparkles } from 'lucide-react';
 import { PROFILE_DATA } from '../data/portfolioData';
 import { Language, PageId } from '../types';
 
@@ -24,8 +24,6 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
 
   const [submitted, setSubmitted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [copiedPhone, setCopiedPhone] = useState(false);
-  const [isPhoneRevealed, setIsPhoneRevealed] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,12 +35,6 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
     navigator.clipboard.writeText(PROFILE_DATA.links.email);
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2000);
-  };
-
-  const handleCopyPhone = () => {
-    navigator.clipboard.writeText(PROFILE_DATA.links.phone);
-    setCopiedPhone(true);
-    setTimeout(() => setCopiedPhone(false), 2000);
   };
 
   return (
@@ -83,41 +75,30 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
               </span>
             </div>
 
-            {/* Masked / Protected Phone Display */}
-            <div className="p-3.5 bg-neutral-50 rounded-xl border border-neutral-200/70 flex items-center justify-between">
+            {/* Direct Call Action Button (No Plain Digits Displayed) */}
+            <div className="p-4 bg-neutral-50 rounded-xl border border-neutral-200/70 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-amber-500/10 text-amber-700 flex items-center justify-center">
-                  <Phone className="w-4 h-4" />
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
+                  <Phone className="w-5 h-5" />
                 </div>
                 <div>
                   <span className="text-[11px] font-bold text-neutral-400 block uppercase tracking-wider font-display">
-                    {lang === 'en' ? 'Direct Mobile' : 'شماره تماس مستقیم'}
+                    {lang === 'en' ? 'Direct Mobile Calling' : 'تماس مستقیم تلفنی'}
                   </span>
-                  <span className="text-sm sm:text-base font-black font-mono text-neutral-900 tracking-wider" dir="ltr">
-                    {isPhoneRevealed ? PROFILE_DATA.links.phoneFormatted : '+98 914 ••• ••53'}
+                  <span className="text-xs font-semibold text-neutral-600">
+                    {lang === 'en' ? 'Click to call directly from your device' : 'جهت برقراری تماس مستقیم کلیک کنید'}
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => setIsPhoneRevealed((prev) => !prev)}
-                  className="p-2 rounded-lg bg-white border border-neutral-200 hover:bg-neutral-100 text-neutral-600 transition-colors cursor-pointer"
-                  title={isPhoneRevealed ? (lang === 'en' ? 'Hide digits' : 'مخفی‌سازی') : (lang === 'en' ? 'Reveal number' : 'نمایش شماره')}
-                >
-                  {isPhoneRevealed ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCopyPhone}
-                  className="p-2 rounded-lg bg-white border border-neutral-200 hover:bg-neutral-100 text-neutral-600 transition-colors cursor-pointer"
-                  title={copiedPhone ? (lang === 'en' ? 'Copied' : 'کپی شد') : (lang === 'en' ? 'Copy number' : 'کپی شماره')}
-                >
-                  {copiedPhone ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-                </button>
-              </div>
+              <a
+                href={`tel:${PROFILE_DATA.links.phone}`}
+                className="py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs inline-flex items-center gap-2 cursor-pointer font-display"
+                title={lang === 'en' ? 'Place Call' : 'تماس تلفنی'}
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>{lang === 'en' ? 'Call Now' : 'برقراری تماس'}</span>
+              </a>
             </div>
 
             {/* Direct One-Click Icon Action Channels */}

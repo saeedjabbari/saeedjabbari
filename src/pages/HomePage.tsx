@@ -31,25 +31,31 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Copy Column (7 cols) */}
             <div className="lg:col-span-7 space-y-6">
-              {/* Refined editorial kicker */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-100 text-neutral-800 text-xs font-bold font-display tracking-wider uppercase">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span>{lang === 'en' ? 'Portfolio & Art Direction' : 'پورتفولیو و هدایت هنری'}</span>
+              {/* Service Offering Kicker */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-900 text-xs font-bold font-display tracking-wider uppercase">
+                <span className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
+                <span>{lang === 'en' ? 'Design Services & Studio Solutions' : 'ارائه خدمات تخصصی دیزاین و برندینگ'}</span>
               </div>
 
-              {/* Main Headline */}
-              <div className="space-y-2">
-                <span className="block text-sm sm:text-base font-bold text-neutral-500 font-display uppercase tracking-widest">
-                  {PROFILE_DATA.name[lang]}
-                </span>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-neutral-950 tracking-tight leading-[1.12]">
-                  {PROFILE_DATA.title[lang]}
+              {/* Main Service Headline */}
+              <div className="space-y-3">
+                <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-neutral-950 tracking-tight leading-[1.14]">
+                  {lang === 'en'
+                    ? 'Brand Identity Systems, Packaging Engineering & Product Communication'
+                    : 'طراحی سیستم‌های هویت بصری، مهندسی بسته‌بندی و ارتباطات برند'}
                 </h1>
+                <p className="text-sm sm:text-base font-bold text-indigo-950 font-display">
+                  {lang === 'en'
+                    ? 'Creative Direction & Visual Systems by Saeed Jabbari · Art & Creative Director'
+                    : 'راهکارهای یکپارچه دیزاین، هویت سازمانی، ساختار بسته‌بندی و کاتالوگ صنعتی — سعید جباری (مدیر هنری و خلاقیت)'}
+                </p>
               </div>
 
               {/* Tagline & Subtext */}
               <p className="text-base sm:text-lg text-neutral-600 font-medium leading-relaxed max-w-2xl">
-                {PROFILE_DATA.shortBio[lang]}
+                {lang === 'en'
+                  ? 'We design authoritative brand identities, retail packaging dielines, photorealistic 3D product visualizations, and comprehensive industrial publications that command attention and drive commercial market success.'
+                  : 'خلق نشان‌های تجاری معتبر، سیستم‌های هویت بصری، مهندسی خطوط تیغ و جعبه‌های بسته‌بندی، تصویرسازی سه‌بعدی محصولات و کاتالوگ‌های جامع مهندسی با رویکردی ساختارمند و خروجی چاپی و دیجیتال بی‌نقص.'}
               </p>
 
               {/* CTAs */}

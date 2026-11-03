@@ -43,7 +43,7 @@ export const Footer: React.FC<FooterProps> = ({
                   {PROFILE_DATA.name[lang]}
                 </span>
                 <span className="text-[11px] font-display font-medium text-neutral-500 uppercase tracking-wider">
-                  {lang === 'en' ? 'Art Director & Brand Designer' : 'مدیر هنری و طراح برند'}
+                  {lang === 'en' ? 'Art & Creative Director' : 'مدیر هنری و خلاقیت'}
                 </span>
               </div>
             </div>
@@ -154,10 +154,11 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="space-y-2.5 text-xs font-bold">
               <a
                 href={`tel:${PROFILE_DATA.links.phone}`}
-                className="w-full py-2 px-3 bg-neutral-900 hover:bg-neutral-800 text-amber-400 font-black rounded-full transition-colors text-center block font-display tracking-tight"
-                dir="ltr"
+                className="w-full py-2.5 px-4 bg-neutral-900 hover:bg-neutral-800 text-white font-bold rounded-full transition-colors text-center inline-flex items-center justify-center gap-2 font-display text-xs tracking-tight"
+                title={lang === 'en' ? 'Call Directly' : 'برقراری تماس مستقیم'}
               >
-                {PROFILE_DATA.links.phoneFormatted}
+                <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{lang === 'en' ? 'Direct Call' : 'تماس مستقیم'}</span>
               </a>
               <button
                 onClick={() => {

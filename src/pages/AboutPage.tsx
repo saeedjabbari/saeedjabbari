@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, Compass, Cpu, Layers, Palette, ShieldCheck, Terminal, Award, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, Compass, Cpu, Layers, Palette, ShieldCheck, Terminal, Award, ExternalLink, Sparkles } from 'lucide-react';
 import { PROFILE_DATA } from '../data/portfolioData';
 import { Language, PageId } from '../types';
 
@@ -82,8 +82,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ lang, onNavigate }) => {
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-neutral-950 tracking-tight leading-tight">
               {lang === 'en'
-                ? 'Art Director, Brand Designer & Visual Strategist'
-                : 'مدیر هنری، طراح برند و استراتژیست بصری'}
+                ? 'Art & Creative Director'
+                : 'مدیر هنری و خلاقیت'}
             </h1>
           </div>
 
@@ -95,15 +95,15 @@ export const AboutPage: React.FC<AboutPageProps> = ({ lang, onNavigate }) => {
 
           <div className="pt-2 flex flex-wrap gap-4 text-xs font-bold text-neutral-800">
             <div className="flex items-center gap-2 bg-neutral-50 px-4 py-2.5 rounded-2xl border border-neutral-100">
-              <Award className="w-4 h-4 text-amber-600 shrink-0" />
+              <Award className="w-4 h-4 text-indigo-600 shrink-0" />
               <span>{lang === 'en' ? '10+ Years Professional Practice' : '۱۰+ سال فعالیت حرفه‌ای دیزاین'}</span>
             </div>
             <div className="flex items-center gap-2 bg-neutral-50 px-4 py-2.5 rounded-2xl border border-neutral-100">
-              <Compass className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>{lang === 'en' ? 'M.Sc. Civil Engineering' : 'کارشناسی ارشد مهندسی عمران'}</span>
+              <Sparkles className="w-4 h-4 text-indigo-600 shrink-0" />
+              <span>{lang === 'en' ? 'Art & Creative Director' : 'مدیر هنری و خلاقیت'}</span>
             </div>
             <div className="flex items-center gap-2 bg-neutral-50 px-4 py-2.5 rounded-2xl border border-neutral-100">
-              <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-indigo-600 shrink-0" />
               <span>{lang === 'en' ? 'FMCG · B2B · Industrial Focus' : 'تخصص در B2B، صنایع و FMCG'}</span>
             </div>
           </div>
