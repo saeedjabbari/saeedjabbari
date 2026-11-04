@@ -133,10 +133,10 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
                   target="_blank"
                   rel="noreferrer"
                   className="p-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 text-center group shadow-2xs"
-                  title="Telegram"
+                  title={lang === 'en' ? 'Telegram' : 'تلگرام'}
                 >
                   <Send className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-bold">Telegram</span>
+                  <span className="text-xs font-bold">{lang === 'en' ? 'Telegram' : 'تلگرام'}</span>
                 </a>
               </div>
             </div>

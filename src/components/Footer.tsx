@@ -175,7 +175,7 @@ export const Footer: React.FC<FooterProps> = ({
                 className="w-full py-2 px-3 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-full transition-colors cursor-pointer inline-flex items-center justify-center gap-1.5"
               >
                 <Globe className="w-3.5 h-3.5 text-neutral-500" />
-                <span>{lang === 'en' ? 'تغییر به فارسی' : 'Switch to English'}</span>
+                <span>{lang === 'en' ? 'Switch to Persian' : 'تغییر به زبان انگلیسی'}</span>
               </button>
 
               <button

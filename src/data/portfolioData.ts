@@ -24,7 +24,7 @@ export const PROFILE_DATA = {
     phone: '+989141493453',
     phoneFormatted: '+98 914 149 3453',
     whatsapp: 'https://wa.me/989141493453',
-    telegram: 'https://t.me/saeedjabbari',
+    telegram: 'https://t.me/saeedjabbari21',
     location: {
       en: 'Tehran · Open to Worldwide Relocation & Remote Collaborations',
       fa: 'تهران · آماده همکاری‌های پروژه‌ای بین‌المللی و دورکاری',

@@ -2,6 +2,8 @@ import React, { useState, useMemo, useRef } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowUpRight,
+  Award,
   Briefcase,
   Building2,
   Calendar,
@@ -11,14 +13,15 @@ import {
   ChevronRight,
   ChevronUp,
   Compass,
+  FileCheck,
   HardHat,
   Layers,
   LayoutGrid,
-  LineChart,
   MapPin,
   MessageCircle,
   Package,
   Phone,
+  Radar,
   Search,
   Send,
   Sparkles,
@@ -35,7 +38,7 @@ interface ExperiencePageProps {
 
 type FilterCategory = 'all' | 'flagship' | 'brand_digital' | 'packaging_3d' | 'editorial_print' | 'civil_engineering';
 type LocationFilter = 'all' | 'tehran' | 'urmia' | 'istanbul_global';
-type DesktopViewMode = 'timeline_chart' | 'all_grid';
+type ViewMode = 'linear_timeline' | 'radar_matrix' | 'all_cards';
 
 interface ScopeScaleMeta {
   tier: 'flagship' | 'significant' | 'focused';
@@ -47,13 +50,12 @@ interface ScopeScaleMeta {
   yearEn: string;
   timelineYearFa: string;
   timelineYearEn: string;
-  volumeScore: number; // 0 - 100 for stock market chart elevation
+  volumeScore: number;
   locationHub: 'tehran' | 'urmia' | 'istanbul_global';
   cityLabelFa: string;
   cityLabelEn: string;
   tickerFa: string;
   tickerEn: string;
-  colSpanDesktop: string;
   isHighImpact: boolean;
 }
 
@@ -94,7 +96,6 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     cityLabelEn: 'Tehran & Global',
     tickerFa: 'راد سامان توس',
     tickerEn: 'RST Trade',
-    colSpanDesktop: 'md:col-span-2 lg:col-span-2',
     isHighImpact: true,
   },
   exp_tanabi: {
@@ -113,7 +114,6 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     cityLabelEn: 'Urmia',
     tickerFa: 'بازرگانی تنابی',
     tickerEn: 'Tanabi Group',
-    colSpanDesktop: 'md:col-span-2 lg:col-span-2',
     isHighImpact: true,
   },
   exp_khesht_avval: {
@@ -132,7 +132,6 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     cityLabelEn: 'Urmia',
     tickerFa: 'خشت اول',
     tickerEn: 'Khesht Avval',
-    colSpanDesktop: 'md:col-span-2 lg:col-span-2',
     isHighImpact: true,
   },
   exp_pransa: {
@@ -151,7 +150,6 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     cityLabelEn: 'Tehran (Iran Mall)',
     tickerFa: 'پرانسا کازمتیکس',
     tickerEn: 'Pransa 3D',
-    colSpanDesktop: 'md:col-span-2 lg:col-span-2',
     isHighImpact: true,
   },
   exp_urmia_fda: {
@@ -170,7 +168,6 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     cityLabelEn: 'Urmia',
     tickerFa: 'معاونت غذا و دارو',
     tickerEn: 'Urmia FDA',
-    colSpanDesktop: 'md:col-span-2 lg:col-span-2',
     isHighImpact: true,
   },
   exp_urmia_med_uni: {
@@ -178,45 +175,43 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     scopeBadgeFa: 'طراحی نشان تجاری رسمی و گایدلاین هویت معاونت تحقیقات و فناوری',
     scopeBadgeEn: 'Official Emblem, Typography & Identity Manual for Academic Deputy',
     scopeMetricFa: 'نشان رسمی و تایپوگرافی',
-    scopeMetricEn: 'Official Academic Mark',
+    scopeMetricEn: 'Identity & Typography',
     yearFa: '۱۴۰۳',
     yearEn: '2024',
     timelineYearFa: '۱۴۰۳',
     timelineYearEn: '2024',
-    volumeScore: 55,
+    volumeScore: 78,
     locationHub: 'urmia',
     cityLabelFa: 'ارومیه',
     cityLabelEn: 'Urmia',
-    tickerFa: 'علوم پزشکی',
-    tickerEn: 'Med Uni',
-    colSpanDesktop: 'col-span-1',
+    tickerFa: 'دانشگاه علوم پزشکی',
+    tickerEn: 'Med University',
     isHighImpact: false,
   },
   exp_ofogh_iranian: {
     tier: 'significant',
     scopeBadgeFa: 'کمپین‌های تبلیغاتی چندکاناله، هویت بصری و گرافیک تجاری',
-    scopeBadgeEn: 'Multi-Channel Marketing Campaigns & Client Branding',
+    scopeBadgeEn: 'Multi-Channel Advertising Campaigns, Commercial Identity & Collateral',
     scopeMetricFa: 'کمپین‌های چندکاناله بازاریابی',
     scopeMetricEn: 'Multi-Channel Campaigns',
     yearFa: '۱۴۰۲ - ۱۴۰۳',
     yearEn: '2023 – 2024',
     timelineYearFa: '۱۴۰۳',
     timelineYearEn: '2024',
-    volumeScore: 68,
+    volumeScore: 80,
     locationHub: 'urmia',
     cityLabelFa: 'ارومیه',
     cityLabelEn: 'Urmia',
     tickerFa: 'افق ایرانیان',
-    tickerEn: 'Ofogh Iranian',
-    colSpanDesktop: 'col-span-1',
+    tickerEn: 'Ofogh Agency',
     isHighImpact: false,
   },
   exp_maral: {
     tier: 'flagship',
     scopeBadgeFa: '۳۱۰K+ بازدید ویدئو محصول · هدایت هنری، تلفیق AI و کاتالوگ صادراتی',
-    scopeBadgeEn: '310K+ Organic Video Views · AI Art Direction & Export Collateral',
+    scopeBadgeEn: '310K+ Viral Product Views · Art Direction, AI Integration & Export Catalog',
     scopeMetricFa: '۳۱۰K+ ویو · تلفیق AI',
-    scopeMetricEn: '310K+ Views · AI Synthesis',
+    scopeMetricEn: '310K Views · AI Motion',
     yearFa: '۱۴۰۲ - ۱۴۰۳',
     yearEn: '2023 – 2024',
     timelineYearFa: '۱۴۰۳',
@@ -225,104 +220,98 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     locationHub: 'istanbul_global',
     cityLabelFa: 'ارومیه و استانبول',
     cityLabelEn: 'Urmia & Istanbul',
-    tickerFa: 'مارال تریلر',
-    tickerEn: 'Maral Trailer',
-    colSpanDesktop: 'md:col-span-2 lg:col-span-2',
+    tickerFa: 'مارال پله',
+    tickerEn: 'Maral Stairs',
     isHighImpact: true,
   },
   exp_nuve: {
     tier: 'significant',
     scopeBadgeFa: 'طراحی شیشه، استراکچر هاردباکس لوکس VIP و عکاسی محصول با AI',
-    scopeBadgeEn: 'Prestige Shimmer Lotion Labeling, VIP Rigid Box & AI Imagery',
+    scopeBadgeEn: 'Cosmetics Glass Container, VIP Rigid Box Dielines & AI Product Imagery',
     scopeMetricFa: 'بسته‌بندی هاردباکس لوکس',
-    scopeMetricEn: 'Prestige VIP Box',
+    scopeMetricEn: 'Luxury Rigid Packaging',
     yearFa: '۱۴۰۲ - ۱۴۰۳',
     yearEn: '2023 – 2024',
     timelineYearFa: '۱۴۰۳',
     timelineYearEn: '2024',
-    volumeScore: 65,
+    volumeScore: 84,
     locationHub: 'tehran',
     cityLabelFa: 'تهران / دورکاری',
     cityLabelEn: 'Tehran / Remote',
-    tickerFa: 'د نووه بیوتی',
-    tickerEn: 'The Nuve',
-    colSpanDesktop: 'col-span-1',
+    tickerFa: 'نووه کازمتیک',
+    tickerEn: 'Nuve Cosmetics',
     isHighImpact: false,
   },
   exp_cic_nowhere: {
     tier: 'significant',
     scopeBadgeFa: '۴ هویت بصری مستقل برای واحدهای تخصصی رمزارز، نرم‌افزار، مارکتینگ و استودیو',
-    scopeBadgeEn: '4 Dedicated Brand Units (Crypto, Software, Marketing, Design)',
+    scopeBadgeEn: '4 Independent Visual Identities for Crypto, Dev, Marketing & Studio Arms',
     scopeMetricFa: '۴ واحد سازمانی و برند مستقل',
-    scopeMetricEn: '4 Dedicated Brand Units',
+    scopeMetricEn: '4 Discrete Brand Units',
     yearFa: '۱۴۰۲',
     yearEn: '2023',
     timelineYearFa: '۱۴۰۲',
     timelineYearEn: '2023',
-    volumeScore: 78,
+    volumeScore: 82,
     locationHub: 'istanbul_global',
     cityLabelFa: 'استانبول و بین‌المللی',
     cityLabelEn: 'Istanbul & Global',
-    tickerFa: 'آژانس CIC',
-    tickerEn: 'CIC Nowhere',
-    colSpanDesktop: 'col-span-1',
+    tickerFa: 'CIC Nowhere',
+    tickerEn: 'CIC Group',
     isHighImpact: false,
   },
   exp_spoota: {
     tier: 'flagship',
     scopeBadgeFa: 'هویت یکپارچه هلدینگ مادر · غرفه بین‌المللی، بسته‌بندی و سررسید سازمانی',
-    scopeBadgeEn: 'Holding Visual Governance · International Expo Pavilion & Packaging',
+    scopeBadgeEn: 'Unified Parent Holding Identity · Expo Pavilion, Packaging & Yearbooks',
     scopeMetricFa: 'هلدینگ مادر + پاویون بین‌المللی',
-    scopeMetricEn: 'Conglomerate Brand + Expo',
+    scopeMetricEn: 'Holding + Expo Pavilion',
     yearFa: '۱۴۰۱ - ۱۴۰۲',
     yearEn: '2022 – 2023',
     timelineYearFa: '۱۴۰۲',
     timelineYearEn: '2023',
-    volumeScore: 87,
-    locationHub: 'istanbul_global',
+    volumeScore: 91,
+    locationHub: 'tehran',
     cityLabelFa: 'تهران و پاویون بین‌المللی',
-    cityLabelEn: 'Tehran & Global Expo',
+    cityLabelEn: 'Tehran & Expo',
     tickerFa: 'هلدینگ اسپوتا',
-    tickerEn: 'Spoota Group',
-    colSpanDesktop: 'md:col-span-2 lg:col-span-2',
+    tickerEn: 'Spoota Holding',
     isHighImpact: true,
   },
   exp_khayyam_print: {
-    tier: 'significant',
+    tier: 'flagship',
     scopeBadgeFa: '۲+ سال فعالیت تخصصی پیش‌ازچاپ، تفکیک رنگ CMYK و نظارت لیتوگرافی',
-    scopeBadgeEn: '2+ Years Prepress Plate Supervision, Dielines & CMYK Separation',
+    scopeBadgeEn: '2+ Years Direct Pre-Press, CMYK Plate Separation & Lithography Supervision',
     scopeMetricFa: '۲+ سال لیتوگرافی و چاپ افست',
-    scopeMetricEn: '2+ Yrs Prepress & Offset',
-    yearFa: '۱۴۰۰ - ۱۴۰۲',
+    scopeMetricEn: 'Pre-Press QC & Offset',
+    yearFa: '۱۴۰۱ - ۱۴۰۳',
     yearEn: '2022 – 2024',
     timelineYearFa: '۱۴۰۲',
     timelineYearEn: '2023',
-    volumeScore: 72,
+    volumeScore: 87,
     locationHub: 'urmia',
     cityLabelFa: 'ارومیه',
     cityLabelEn: 'Urmia',
-    tickerFa: 'چاپخانه خیام',
+    tickerFa: 'چاپ خیام',
     tickerEn: 'Khayyam Print',
-    colSpanDesktop: 'col-span-1',
-    isHighImpact: false,
+    isHighImpact: true,
   },
   exp_behrad: {
-    tier: 'significant',
+    tier: 'focused',
     scopeBadgeFa: '۳ سال طراحی کاتالوگ‌های شرکتی، هویت برند و اوراق اداری تجاری',
-    scopeBadgeEn: '3 Years Corporate Print Publications & Multi-Industry Collateral',
+    scopeBadgeEn: '3 Years Corporate Catalogues, Brand Systems & Stationery Production',
     scopeMetricFa: '۳ سال انتشارات و چاپ تجاری',
     scopeMetricEn: '3 Yrs Commercial Print',
-    yearFa: '۱۳۹۸ - ۱۴۰۱',
+    yearFa: '۱۳۹۹ - ۱۴۰۲',
     yearEn: '2020 – 2023',
     timelineYearFa: '۱۴۰۱',
     timelineYearEn: '2022',
-    volumeScore: 70,
+    volumeScore: 72,
     locationHub: 'tehran',
     cityLabelFa: 'تهران',
     cityLabelEn: 'Tehran',
     tickerFa: 'تبلیغات به‌راد',
     tickerEn: 'Behrad Ad',
-    colSpanDesktop: 'col-span-1',
     isHighImpact: false,
   },
   exp_urmia_municipality: {
@@ -341,7 +330,6 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     cityLabelEn: 'Urmia',
     tickerFa: 'شهرداری ارومیه',
     tickerEn: 'Municipality',
-    colSpanDesktop: 'col-span-1',
     isHighImpact: false,
   },
   exp_nasb_niroo: {
@@ -360,7 +348,6 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     cityLabelEn: 'Ardabil & NW Region',
     tickerFa: 'نصب نیرو',
     tickerEn: 'Nasb Niroo',
-    colSpanDesktop: 'col-span-1',
     isHighImpact: false,
   },
   exp_ministry_energy: {
@@ -379,10 +366,412 @@ const EXPERIENCE_SCALE_MAP: Record<string, ScopeScaleMeta> = {
     cityLabelEn: 'Dam Projects',
     tickerFa: 'وزارت نیرو',
     tickerEn: 'Ministry Energy',
-    colSpanDesktop: 'col-span-1',
     isHighImpact: false,
   },
 };
+
+// Unique Signature Color Palette per Milestone (Each Card / Box has a distinct curated color theme)
+export interface MilestonePalette {
+  accentHex: string;
+  glowRgba: string;
+  nameEn: string;
+  nameFa: string;
+  dotClass: string;
+  tabBgClass: string;
+  tabTextClass: string;
+  tabBorderClass: string;
+  cardBorderClass: string;
+  cardBgClass: string;
+  badgeBgClass: string;
+  badgeTextClass: string;
+  accentTextClass: string;
+  buttonClass: string;
+  checkIconClass: string;
+  pillSelectedClass: string;
+  pillBorderClass: string;
+}
+
+export const MILESTONE_PALETTES: Record<string, MilestonePalette> = {
+  exp_rst: {
+    accentHex: '#D4FF14',
+    glowRgba: 'rgba(212, 255, 20, 0.28)',
+    nameEn: 'Electric Neon Lime',
+    nameFa: 'لایم نئونی صنعتی',
+    dotClass: 'bg-[#D4FF14] text-neutral-950',
+    tabBgClass: 'bg-[#121316] text-[#D4FF14] border-[#D4FF14]/50',
+    tabTextClass: 'text-[#D4FF14]',
+    tabBorderClass: 'border-[#D4FF14]/40',
+    cardBorderClass: 'border-[#D4FF14]/60',
+    cardBgClass: 'bg-[#121316] text-white',
+    badgeBgClass: 'bg-[#D4FF14] text-neutral-950 font-black',
+    badgeTextClass: 'text-neutral-950',
+    accentTextClass: 'text-[#D4FF14]',
+    buttonClass: 'bg-[#D4FF14] text-neutral-950 hover:bg-[#c2eb00] font-black',
+    checkIconClass: 'text-[#D4FF14]',
+    pillSelectedClass: 'bg-[#D4FF14] text-neutral-950 border-[#D4FF14] shadow-md ring-2 ring-[#D4FF14]/40',
+    pillBorderClass: 'border-[#D4FF14]',
+  },
+  exp_tanabi: {
+    accentHex: '#06B6D4',
+    glowRgba: 'rgba(6, 182, 212, 0.28)',
+    nameEn: 'Vivid Cyan',
+    nameFa: 'فیروزه‌ای نئونی',
+    dotClass: 'bg-cyan-500 text-white',
+    tabBgClass: 'bg-[#081b29] text-cyan-300 border-cyan-500/50',
+    tabTextClass: 'text-cyan-300',
+    tabBorderClass: 'border-cyan-500/40',
+    cardBorderClass: 'border-cyan-500/60',
+    cardBgClass: 'bg-[#081b29] text-white',
+    badgeBgClass: 'bg-cyan-500 text-neutral-950 font-black',
+    badgeTextClass: 'text-neutral-950',
+    accentTextClass: 'text-cyan-400',
+    buttonClass: 'bg-cyan-400 text-neutral-950 hover:bg-cyan-300 font-black',
+    checkIconClass: 'text-cyan-400',
+    pillSelectedClass: 'bg-cyan-500 text-white border-cyan-400 shadow-md ring-2 ring-cyan-500/40',
+    pillBorderClass: 'border-cyan-500',
+  },
+  exp_khesht_avval: {
+    accentHex: '#F59E0B',
+    glowRgba: 'rgba(245, 158, 11, 0.28)',
+    nameEn: 'Sunburst Amber',
+    nameFa: 'کهربایی طلایی',
+    dotClass: 'bg-amber-500 text-neutral-950',
+    tabBgClass: 'bg-[#221607] text-amber-300 border-amber-500/50',
+    tabTextClass: 'text-amber-300',
+    tabBorderClass: 'border-amber-500/40',
+    cardBorderClass: 'border-amber-500/60',
+    cardBgClass: 'bg-[#221607] text-white',
+    badgeBgClass: 'bg-amber-500 text-neutral-950 font-black',
+    badgeTextClass: 'text-neutral-950',
+    accentTextClass: 'text-amber-400',
+    buttonClass: 'bg-amber-400 text-neutral-950 hover:bg-amber-300 font-black',
+    checkIconClass: 'text-amber-400',
+    pillSelectedClass: 'bg-amber-500 text-neutral-950 border-amber-400 shadow-md ring-2 ring-amber-500/40',
+    pillBorderClass: 'border-amber-500',
+  },
+  exp_pransa: {
+    accentHex: '#EC4899',
+    glowRgba: 'rgba(236, 72, 153, 0.28)',
+    nameEn: 'Vibrant Magenta',
+    nameFa: 'ارغوانی لوکس',
+    dotClass: 'bg-pink-500 text-white',
+    tabBgClass: 'bg-[#240c1c] text-pink-300 border-pink-500/50',
+    tabTextClass: 'text-pink-300',
+    tabBorderClass: 'border-pink-500/40',
+    cardBorderClass: 'border-pink-500/60',
+    cardBgClass: 'bg-[#240c1c] text-white',
+    badgeBgClass: 'bg-pink-500 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-pink-400',
+    buttonClass: 'bg-pink-500 text-white hover:bg-pink-600 font-black',
+    checkIconClass: 'text-pink-400',
+    pillSelectedClass: 'bg-pink-500 text-white border-pink-400 shadow-md ring-2 ring-pink-500/40',
+    pillBorderClass: 'border-pink-500',
+  },
+  exp_urmia_fda: {
+    accentHex: '#3B82F6',
+    glowRgba: 'rgba(59, 130, 246, 0.28)',
+    nameEn: 'Royal Cobalt',
+    nameFa: 'آبی کبالت دارویی',
+    dotClass: 'bg-blue-500 text-white',
+    tabBgClass: 'bg-[#0a1835] text-blue-300 border-blue-500/50',
+    tabTextClass: 'text-blue-300',
+    tabBorderClass: 'border-blue-500/40',
+    cardBorderClass: 'border-blue-500/60',
+    cardBgClass: 'bg-[#0a1835] text-white',
+    badgeBgClass: 'bg-blue-500 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-blue-400',
+    buttonClass: 'bg-blue-500 text-white hover:bg-blue-600 font-black',
+    checkIconClass: 'text-blue-400',
+    pillSelectedClass: 'bg-blue-600 text-white border-blue-400 shadow-md ring-2 ring-blue-500/40',
+    pillBorderClass: 'border-blue-500',
+  },
+  exp_urmia_med_uni: {
+    accentHex: '#10B981',
+    glowRgba: 'rgba(16, 185, 129, 0.28)',
+    nameEn: 'Emerald Green',
+    nameFa: 'زمردی دانشگاهی',
+    dotClass: 'bg-emerald-500 text-neutral-950',
+    tabBgClass: 'bg-[#092218] text-emerald-300 border-emerald-500/50',
+    tabTextClass: 'text-emerald-300',
+    tabBorderClass: 'border-emerald-500/40',
+    cardBorderClass: 'border-emerald-500/60',
+    cardBgClass: 'bg-[#092218] text-white',
+    badgeBgClass: 'bg-emerald-400 text-neutral-950 font-black',
+    badgeTextClass: 'text-neutral-950',
+    accentTextClass: 'text-emerald-400',
+    buttonClass: 'bg-emerald-400 text-neutral-950 hover:bg-emerald-300 font-black',
+    checkIconClass: 'text-emerald-400',
+    pillSelectedClass: 'bg-emerald-500 text-neutral-950 border-emerald-400 shadow-md ring-2 ring-emerald-500/40',
+    pillBorderClass: 'border-emerald-500',
+  },
+  exp_ofogh_iranian: {
+    accentHex: '#F97316',
+    glowRgba: 'rgba(249, 115, 22, 0.28)',
+    nameEn: 'Solar Orange',
+    nameFa: 'نارنجی نمایشگاهی',
+    dotClass: 'bg-orange-500 text-white',
+    tabBgClass: 'bg-[#291408] text-orange-300 border-orange-500/50',
+    tabTextClass: 'text-orange-300',
+    tabBorderClass: 'border-orange-500/40',
+    cardBorderClass: 'border-orange-500/60',
+    cardBgClass: 'bg-[#291408] text-white',
+    badgeBgClass: 'bg-orange-500 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-orange-400',
+    buttonClass: 'bg-orange-500 text-white hover:bg-orange-600 font-black',
+    checkIconClass: 'text-orange-400',
+    pillSelectedClass: 'bg-orange-500 text-white border-orange-400 shadow-md ring-2 ring-orange-500/40',
+    pillBorderClass: 'border-orange-500',
+  },
+  exp_maral: {
+    accentHex: '#8B5CF6',
+    glowRgba: 'rgba(139, 92, 246, 0.28)',
+    nameEn: 'Electric Violet',
+    nameFa: 'بنفش الکتریک تریلر',
+    dotClass: 'bg-purple-500 text-white',
+    tabBgClass: 'bg-[#180f2d] text-purple-300 border-purple-500/50',
+    tabTextClass: 'text-purple-300',
+    tabBorderClass: 'border-purple-500/40',
+    cardBorderClass: 'border-purple-500/60',
+    cardBgClass: 'bg-[#180f2d] text-white',
+    badgeBgClass: 'bg-purple-500 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-purple-400',
+    buttonClass: 'bg-purple-500 text-white hover:bg-purple-600 font-black',
+    checkIconClass: 'text-purple-400',
+    pillSelectedClass: 'bg-purple-600 text-white border-purple-400 shadow-md ring-2 ring-purple-500/40',
+    pillBorderClass: 'border-purple-500',
+  },
+  exp_nuve: {
+    accentHex: '#F43F5E',
+    glowRgba: 'rgba(244, 63, 94, 0.28)',
+    nameEn: 'Luxury Crimson',
+    nameFa: 'کرمسون رز آرایشی',
+    dotClass: 'bg-rose-500 text-white',
+    tabBgClass: 'bg-[#270b16] text-rose-300 border-rose-500/50',
+    tabTextClass: 'text-rose-300',
+    tabBorderClass: 'border-rose-500/40',
+    cardBorderClass: 'border-rose-500/60',
+    cardBgClass: 'bg-[#270b16] text-white',
+    badgeBgClass: 'bg-rose-500 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-rose-400',
+    buttonClass: 'bg-rose-500 text-white hover:bg-rose-600 font-black',
+    checkIconClass: 'text-rose-400',
+    pillSelectedClass: 'bg-rose-500 text-white border-rose-400 shadow-md ring-2 ring-rose-500/40',
+    pillBorderClass: 'border-rose-500',
+  },
+  exp_cic_nowhere: {
+    accentHex: '#6366F1',
+    glowRgba: 'rgba(99, 102, 241, 0.28)',
+    nameEn: 'Cyber Indigo',
+    nameFa: 'نیلی استانبول',
+    dotClass: 'bg-indigo-500 text-white',
+    tabBgClass: 'bg-[#121332] text-indigo-300 border-indigo-500/50',
+    tabTextClass: 'text-indigo-300',
+    tabBorderClass: 'border-indigo-500/40',
+    cardBorderClass: 'border-indigo-500/60',
+    cardBgClass: 'bg-[#121332] text-white',
+    badgeBgClass: 'bg-indigo-500 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-indigo-400',
+    buttonClass: 'bg-indigo-500 text-white hover:bg-indigo-600 font-black',
+    checkIconClass: 'text-indigo-400',
+    pillSelectedClass: 'bg-indigo-600 text-white border-indigo-400 shadow-md ring-2 ring-indigo-500/40',
+    pillBorderClass: 'border-indigo-500',
+  },
+  exp_spoota: {
+    accentHex: '#EAB308',
+    glowRgba: 'rgba(234, 179, 8, 0.28)',
+    nameEn: 'Imperial Gold',
+    nameFa: 'طلایی هلدینگ اسپوتا',
+    dotClass: 'bg-yellow-500 text-neutral-950',
+    tabBgClass: 'bg-[#221b06] text-yellow-300 border-yellow-500/50',
+    tabTextClass: 'text-yellow-300',
+    tabBorderClass: 'border-yellow-500/40',
+    cardBorderClass: 'border-yellow-500/60',
+    cardBgClass: 'bg-[#221b06] text-white',
+    badgeBgClass: 'bg-yellow-400 text-neutral-950 font-black',
+    badgeTextClass: 'text-neutral-950',
+    accentTextClass: 'text-yellow-400',
+    buttonClass: 'bg-yellow-400 text-neutral-950 hover:bg-yellow-300 font-black',
+    checkIconClass: 'text-yellow-400',
+    pillSelectedClass: 'bg-yellow-500 text-neutral-950 border-yellow-400 shadow-md ring-2 ring-yellow-500/40',
+    pillBorderClass: 'border-yellow-500',
+  },
+  exp_khayyam_print: {
+    accentHex: '#0284C7',
+    glowRgba: 'rgba(2, 132, 199, 0.28)',
+    nameEn: 'CMYK Cyan Press',
+    nameFa: 'سایان لیتوگرافی و افست',
+    dotClass: 'bg-sky-500 text-white',
+    tabBgClass: 'bg-[#081f33] text-sky-300 border-sky-500/50',
+    tabTextClass: 'text-sky-300',
+    tabBorderClass: 'border-sky-500/40',
+    cardBorderClass: 'border-sky-500/60',
+    cardBgClass: 'bg-[#081f33] text-white',
+    badgeBgClass: 'bg-sky-500 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-sky-400',
+    buttonClass: 'bg-sky-500 text-white hover:bg-sky-600 font-black',
+    checkIconClass: 'text-sky-400',
+    pillSelectedClass: 'bg-sky-600 text-white border-sky-400 shadow-md ring-2 ring-sky-500/40',
+    pillBorderClass: 'border-sky-500',
+  },
+  exp_behrad: {
+    accentHex: '#0D9488',
+    glowRgba: 'rgba(13, 148, 136, 0.28)',
+    nameEn: 'Seafoam Teal',
+    nameFa: 'سبز کله‌غازی به‌راد',
+    dotClass: 'bg-teal-500 text-white',
+    tabBgClass: 'bg-[#06211f] text-teal-300 border-teal-500/50',
+    tabTextClass: 'text-teal-300',
+    tabBorderClass: 'border-teal-500/40',
+    cardBorderClass: 'border-teal-500/60',
+    cardBgClass: 'bg-[#06211f] text-white',
+    badgeBgClass: 'bg-teal-400 text-neutral-950 font-black',
+    badgeTextClass: 'text-neutral-950',
+    accentTextClass: 'text-teal-400',
+    buttonClass: 'bg-teal-400 text-neutral-950 hover:bg-teal-300 font-black',
+    checkIconClass: 'text-teal-400',
+    pillSelectedClass: 'bg-teal-500 text-white border-teal-400 shadow-md ring-2 ring-teal-500/40',
+    pillBorderClass: 'border-teal-500',
+  },
+  exp_urmia_municipality: {
+    accentHex: '#64748B',
+    glowRgba: 'rgba(100, 116, 139, 0.28)',
+    nameEn: 'Steel Slate',
+    nameFa: 'خاکستری فولادی عمران',
+    dotClass: 'bg-slate-500 text-white',
+    tabBgClass: 'bg-[#181f29] text-slate-300 border-slate-500/50',
+    tabTextClass: 'text-slate-300',
+    tabBorderClass: 'border-slate-500/40',
+    cardBorderClass: 'border-slate-500/60',
+    cardBgClass: 'bg-[#181f29] text-white',
+    badgeBgClass: 'bg-slate-500 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-slate-300',
+    buttonClass: 'bg-slate-600 text-white hover:bg-slate-500 font-black',
+    checkIconClass: 'text-slate-300',
+    pillSelectedClass: 'bg-slate-600 text-white border-slate-400 shadow-md ring-2 ring-slate-500/40',
+    pillBorderClass: 'border-slate-500',
+  },
+  exp_nasb_niroo: {
+    accentHex: '#EA580C',
+    glowRgba: 'rgba(234, 88, 12, 0.28)',
+    nameEn: 'Safety Orange Rust',
+    nameFa: 'نارنجی سازه بتنی و سد',
+    dotClass: 'bg-orange-600 text-white',
+    tabBgClass: 'bg-[#291307] text-orange-300 border-orange-600/50',
+    tabTextClass: 'text-orange-300',
+    tabBorderClass: 'border-orange-600/40',
+    cardBorderClass: 'border-orange-600/60',
+    cardBgClass: 'bg-[#291307] text-white',
+    badgeBgClass: 'bg-orange-600 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-orange-400',
+    buttonClass: 'bg-orange-600 text-white hover:bg-orange-700 font-black',
+    checkIconClass: 'text-orange-400',
+    pillSelectedClass: 'bg-orange-600 text-white border-orange-400 shadow-md ring-2 ring-orange-500/40',
+    pillBorderClass: 'border-orange-500',
+  },
+  exp_ministry_energy: {
+    accentHex: '#0891B2',
+    glowRgba: 'rgba(8, 145, 178, 0.28)',
+    nameEn: 'Hydro Deep Cyan',
+    nameFa: 'آبی هیدرولیک سدسازی',
+    dotClass: 'bg-cyan-600 text-white',
+    tabBgClass: 'bg-[#09222c] text-cyan-300 border-cyan-600/50',
+    tabTextClass: 'text-cyan-300',
+    tabBorderClass: 'border-cyan-600/40',
+    cardBorderClass: 'border-cyan-600/60',
+    cardBgClass: 'bg-[#09222c] text-white',
+    badgeBgClass: 'bg-cyan-600 text-white font-black',
+    badgeTextClass: 'text-white',
+    accentTextClass: 'text-cyan-400',
+    buttonClass: 'bg-cyan-600 text-white hover:bg-cyan-700 font-black',
+    checkIconClass: 'text-cyan-400',
+    pillSelectedClass: 'bg-cyan-600 text-white border-cyan-400 shadow-md ring-2 ring-cyan-500/40',
+    pillBorderClass: 'border-cyan-500',
+  },
+};
+
+// 6 Competency Dimensions for the Interactive Radar / Spider Chart
+interface RadarDimension {
+  id: string;
+  labelEn: string;
+  labelFa: string;
+  score: number;
+  highlightEn: string;
+  highlightFa: string;
+  toolsEn: string;
+  toolsFa: string;
+}
+
+const RADAR_DIMENSIONS: RadarDimension[] = [
+  {
+    id: 'art_direction',
+    labelEn: 'Art & Creative Direction',
+    labelFa: 'مدیریت هنری و خلاقیت',
+    score: 98,
+    highlightEn: 'Strategic visual governance, cross-channel coherence, high-impact aesthetic leadership.',
+    highlightFa: 'هدایت استراتژیک هویت بصری، هماهنگی چندکاناله و راهبری زیبایی‌شناسی پروژه‌ها.',
+    toolsEn: 'Creative Direction · Brand Strategy · Design Systems',
+    toolsFa: 'هدایت هنری · استراتژی برند · سیستم‌های دیزاین',
+  },
+  {
+    id: 'brand_systems',
+    labelEn: 'Brand Identity Systems',
+    labelFa: 'سیستم‌های هویت بصری',
+    score: 97,
+    highlightEn: 'Enduring geometric marks, logo modernization, licensed typography & 50+ page brand books.',
+    highlightFa: 'نشان‌های ماندگار هندسی، بازسازی لوگوهای کهنه، تایپوگرافی و کتابچه هویت ۵۰+ صفحه‌ای.',
+    toolsEn: 'Adobe Illustrator · Figma · FontLab · Brand Books',
+    toolsFa: 'ایلاستریتور · فیگما · گایدلاین برند · تایپوگرافی',
+  },
+  {
+    id: 'packaging_dielines',
+    labelEn: 'Packaging & Dielines',
+    labelFa: 'مهندسی بسته‌بندی و خط تیغ',
+    score: 96,
+    highlightEn: 'Folding cartons, luxury magnetic rigid boxes, waterproof cosmetic & food labels.',
+    highlightFa: 'کارتن تاشو، هاردباکس‌های مگنتی لوکس، لیبل‌های ضدآب آرایشی و بهداشتی با رعایت خواب الیاف.',
+    toolsEn: 'Vector Dielines · Paper Caliper · Flute Grain · Rigid Box',
+    toolsFa: 'خطوط تیغ وکتور · گرماژ مقوا · خواب الیاف کاغذ · هاردباکس',
+  },
+  {
+    id: 'prepress_print',
+    labelEn: 'Prepress & Print QC',
+    labelFa: 'نظارت فنی چاپ و لیتوگرافی',
+    score: 95,
+    highlightEn: '2+ years direct offset supervision, CMYK plate separations, Pantone spot inks, dot-gain control.',
+    highlightFa: '۲+ سال نظارت مستقیم لیتوگرافی در چاپخانه خیام، تفکیک رنگ CMYK، رنگ‌های پنتون و کنترل ترام.',
+    toolsEn: 'Offset Lithography · ISO 12647-2 · Pantone PMS · Foil',
+    toolsFa: 'چاپ افست و لیتوگرافی · استاندارد ISO · رنگ‌های اسپات · طلاکوب',
+  },
+  {
+    id: 'technical_publishing',
+    labelEn: 'Technical Catalogues',
+    labelFa: 'نشر صنعتی و کاتالوگ جامع',
+    score: 94,
+    highlightEn: '200-page medical catalogues, heavy machinery axle parts books, exploded schematics.',
+    highlightFa: 'کاتالوگ ۲۰۰ صفحه‌ای تجهیزات پزشکی، کتابچه جامع قطعات محورهای سنگین و دیاگرام‌های انفجاری.',
+    toolsEn: 'Adobe InDesign · Editorial Grids · Complex Data Matrices',
+    toolsFa: 'ایندیزاین · گریدبندی نشر · جداول مشخصات فنی مهندسی',
+  },
+  {
+    id: '3d_cgi_visualization',
+    labelEn: '3D CGI & Product Motion',
+    labelFa: 'رندرینگ ۳D و شبیه‌سازی محصول',
+    score: 90,
+    highlightEn: 'Photorealistic 3D cosmetics (22 products for Iran Mall Expo), cinematic lighting & B2B motion reels.',
+    highlightFa: 'مدل‌سازی سه‌بعدی ۲۲ محصول آرایشی برای پاویون ایران‌مال، نورپردازی صنعتی و موشن‌گرافیک محصول.',
+    toolsEn: '3ds Max · KeyShot · Blender · After Effects',
+    toolsFa: 'تری‌دی مکس · کی‌شات · بلندر · افترافکتس',
+  },
+];
 
 export const ExperiencePage: React.FC<ExperiencePageProps> = ({
   lang,
@@ -396,24 +785,11 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
   const [activeCategory, setActiveCategory] = useState<FilterCategory>('all');
   const [activeLocation, setActiveLocation] = useState<LocationFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [desktopView, setDesktopView] = useState<DesktopViewMode>('timeline_chart');
+  const [viewMode, setViewMode] = useState<ViewMode>('linear_timeline');
+  const [hoveredDimension, setHoveredDimension] = useState<RadarDimension | null>(null);
 
   // Selected experience ID (defaults to RST / newest flagship active in 2026)
   const [selectedExperienceId, setSelectedExperienceId] = useState<string>('exp_rst');
-
-  // Interactive Stock Chart Mouse & Hover Tracking
-  const chartSvgRef = useRef<SVGSVGElement>(null);
-  const [chartMouse, setChartMouse] = useState<{
-    x: number;
-    y: number;
-    active: boolean;
-    nearestId: string | null;
-  }>({
-    x: 0,
-    y: 0,
-    active: false,
-    nearestId: null,
-  });
 
   // Mobile expandable card tracking
   const [mobileExpanded, setMobileExpanded] = useState<Record<string, boolean>>({
@@ -440,8 +816,8 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
       labelEn: 'All Records',
       labelFa: 'همه سوابق',
       icon: Briefcase,
-      activeColor: 'bg-slate-950 text-white shadow-xs',
-      activeBadge: 'bg-slate-800 text-white',
+      activeColor: 'bg-neutral-950 text-white shadow-xs',
+      activeBadge: 'bg-neutral-800 text-white',
     },
     {
       id: 'flagship',
@@ -478,7 +854,7 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
     {
       id: 'civil_engineering',
       labelEn: 'Civil Engineering Roots',
-      labelFa: 'پیشینه مهندسی عمران',
+      labelFa: 'پایه‌های مهندسی عمران',
       icon: HardHat,
       activeColor: 'bg-sky-600 text-white shadow-xs',
       activeBadge: 'bg-sky-700 text-white',
@@ -487,59 +863,34 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
 
   const locationHubs: {
     id: LocationFilter;
-    nameFa: string;
     nameEn: string;
-    badgeStyle: string;
+    nameFa: string;
     dotColor: string;
   }[] = [
-    {
-      id: 'all',
-      nameFa: 'همه شهرها',
-      nameEn: 'All Hubs',
-      badgeStyle: 'bg-slate-100 text-slate-800 border-slate-300',
-      dotColor: 'bg-slate-500',
-    },
-    {
-      id: 'tehran',
-      nameFa: 'تهران',
-      nameEn: 'Tehran',
-      badgeStyle: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-      dotColor: 'bg-indigo-600',
-    },
-    {
-      id: 'urmia',
-      nameFa: 'ارومیه',
-      nameEn: 'Urmia',
-      badgeStyle: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-      dotColor: 'bg-emerald-600',
-    },
-    {
-      id: 'istanbul_global',
-      nameFa: 'استانبول و بین‌المللی',
-      nameEn: 'Istanbul & Global',
-      badgeStyle: 'bg-amber-50 text-amber-800 border-amber-200',
-      dotColor: 'bg-amber-600',
-    },
+    { id: 'all', nameEn: 'All Hubs', nameFa: 'همه مراکز', dotColor: 'bg-neutral-500' },
+    { id: 'tehran', nameEn: 'Tehran Hub', nameFa: 'تهران', dotColor: 'bg-indigo-500' },
+    { id: 'urmia', nameEn: 'Urmia Hub', nameFa: 'ارومیه', dotColor: 'bg-emerald-500' },
+    { id: 'istanbul_global', nameEn: 'Istanbul & Global', nameFa: 'استانبول و بین‌المللی', dotColor: 'bg-amber-500' },
   ];
 
-  // Filter and sort chronologically (Strictly Newest 2026 -> Oldest 2016)
+  // Filtered list of experiences
   const filteredExperiences = useMemo(() => {
     const list = EXPERIENCE_DATA.filter((item) => {
       const meta = EXPERIENCE_SCALE_MAP[item.id];
 
-      // Location Hub filter
-      if (activeLocation !== 'all') {
-        if (!meta || meta.locationHub !== activeLocation) return false;
-      }
-
-      // Category check
+      // Category filter
       if (activeCategory === 'flagship') {
         if (!meta || meta.tier !== 'flagship') return false;
       } else if (activeCategory !== 'all') {
         if (item.category !== activeCategory) return false;
       }
 
-      // Search query check
+      // Location filter
+      if (activeLocation !== 'all') {
+        if (!meta || meta.locationHub !== activeLocation) return false;
+      }
+
+      // Search query
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase().trim();
       const matchCompany =
@@ -568,7 +919,7 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
     });
   }, [activeCategory, activeLocation, searchQuery]);
 
-  // Synchronize spotlight selection when filtered list changes
+  // Synchronize spotlight selection
   React.useEffect(() => {
     if (filteredExperiences.length > 0) {
       const exists = filteredExperiences.some((i) => i.id === selectedExperienceId);
@@ -588,7 +939,7 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
     return filteredExperiences[currentSpotlightIndex] || filteredExperiences[0];
   }, [filteredExperiences, currentSpotlightIndex]);
 
-  // Geographic statistics across all positions
+  // Geographic statistics
   const locationStats = useMemo(() => {
     const total = EXPERIENCE_DATA.length;
     let tehran = 0;
@@ -625,309 +976,156 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
     }
   };
 
-  // Category Color Theme Generator
-  const getCategoryTheme = (category?: string, tier?: 'flagship' | 'significant' | 'focused') => {
-    if (tier === 'flagship') {
-      return {
-        badge: 'bg-indigo-50 text-indigo-900 border-indigo-200/90 font-bold',
-        dot: 'bg-indigo-600',
-        activeRing: 'ring-3 ring-indigo-500 shadow-indigo-500/25',
-        borderHover: 'hover:border-indigo-400',
-        counterBg: 'bg-indigo-600 text-white shadow-xs',
-        scopeBg: 'bg-indigo-50/90 text-indigo-950 border-indigo-200/80',
-        scopeIcon: 'text-indigo-600',
-        pillBg: 'bg-indigo-900 text-white font-bold',
-        cardGradient: 'from-indigo-500/8 via-white to-white',
-        deliverableCheck: 'text-indigo-600',
-        deliverableDot: 'bg-indigo-500',
-        deliverableCard: 'bg-indigo-50/40 border-indigo-100',
-      };
-    }
-
-    switch (category) {
-      case 'packaging_3d':
-        return {
-          badge: 'bg-emerald-50 text-emerald-900 border-emerald-200/90 font-bold',
-          dot: 'bg-emerald-500',
-          activeRing: 'ring-3 ring-emerald-500 shadow-emerald-500/25',
-          borderHover: 'hover:border-emerald-400',
-          counterBg: 'bg-emerald-600 text-white',
-          scopeBg: 'bg-emerald-50/80 text-emerald-950 border-emerald-200/70',
-          scopeIcon: 'text-emerald-600',
-          pillBg: 'bg-emerald-800 text-white font-semibold',
-          cardGradient: 'from-emerald-500/8 via-white to-white',
-          deliverableCheck: 'text-emerald-600',
-          deliverableDot: 'bg-emerald-500',
-          deliverableCard: 'bg-emerald-50/30 border-emerald-100',
-        };
-      case 'brand_digital':
-        return {
-          badge: 'bg-violet-50 text-violet-900 border-violet-200/90 font-bold',
-          dot: 'bg-violet-500',
-          activeRing: 'ring-3 ring-violet-500 shadow-violet-500/25',
-          borderHover: 'hover:border-violet-400',
-          counterBg: 'bg-violet-600 text-white',
-          scopeBg: 'bg-violet-50/80 text-violet-950 border-violet-200/70',
-          scopeIcon: 'text-violet-600',
-          pillBg: 'bg-violet-800 text-white font-semibold',
-          cardGradient: 'from-violet-500/8 via-white to-white',
-          deliverableCheck: 'text-violet-600',
-          deliverableDot: 'bg-violet-500',
-          deliverableCard: 'bg-violet-50/30 border-violet-100',
-        };
-      case 'editorial_print':
-        return {
-          badge: 'bg-rose-50 text-rose-900 border-rose-200/90 font-bold',
-          dot: 'bg-rose-500',
-          activeRing: 'ring-3 ring-rose-500 shadow-rose-500/25',
-          borderHover: 'hover:border-rose-400',
-          counterBg: 'bg-rose-600 text-white',
-          scopeBg: 'bg-rose-50/80 text-rose-950 border-rose-200/70',
-          scopeIcon: 'text-rose-600',
-          pillBg: 'bg-rose-800 text-white font-semibold',
-          cardGradient: 'from-rose-500/8 via-white to-white',
-          deliverableCheck: 'text-rose-600',
-          deliverableDot: 'bg-rose-500',
-          deliverableCard: 'bg-rose-50/30 border-rose-100',
-        };
-      case 'civil_engineering':
-        return {
-          badge: 'bg-sky-50 text-sky-900 border-sky-200/90 font-bold',
-          dot: 'bg-sky-500',
-          activeRing: 'ring-3 ring-sky-500 shadow-sky-500/25',
-          borderHover: 'hover:border-sky-400',
-          counterBg: 'bg-sky-700 text-white',
-          scopeBg: 'bg-sky-50/80 text-sky-950 border-sky-200/70',
-          scopeIcon: 'text-sky-600',
-          pillBg: 'bg-sky-800 text-white font-semibold',
-          cardGradient: 'from-sky-500/8 via-white to-white',
-          deliverableCheck: 'text-sky-600',
-          deliverableDot: 'bg-sky-500',
-          deliverableCard: 'bg-sky-50/30 border-sky-100',
-        };
-      default:
-        return {
-          badge: 'bg-slate-100 text-slate-800 border-slate-200 font-bold',
-          dot: 'bg-slate-600',
-          activeRing: 'ring-3 ring-slate-400',
-          borderHover: 'hover:border-slate-400',
-          counterBg: 'bg-slate-800 text-white',
-          scopeBg: 'bg-slate-100 text-slate-900 border-slate-200',
-          scopeIcon: 'text-slate-600',
-          pillBg: 'bg-slate-900 text-white font-semibold',
-          cardGradient: 'from-slate-500/5 via-white to-white',
-          deliverableCheck: 'text-slate-700',
-          deliverableDot: 'bg-slate-500',
-          deliverableCard: 'bg-slate-50 border-slate-100',
-        };
-    }
-  };
-
-  // Stock Market Chart Dimensions & Coordinates Calculation
-  // SVG Canvas: 1100 width, 300 height
-  const chartWidth = 1100;
-  const chartHeight = 300;
-  const chartPaddingX = 60;
-  const chartTopPadding = 55;
-  const chartBottomPadding = 55;
-  const chartUsableHeight = chartHeight - chartTopPadding - chartBottomPadding;
-
-  const chartPoints = useMemo(() => {
-    if (filteredExperiences.length === 0) return [];
-    const count = filteredExperiences.length;
-
-    return filteredExperiences.map((item, idx) => {
-      const meta = EXPERIENCE_SCALE_MAP[item.id] || {
-        volumeScore: 60,
-        timelineYearFa: item.period.fa,
-        timelineYearEn: item.period.en,
-        cityLabelFa: item.location.fa,
-        cityLabelEn: item.location.en,
-        tickerFa: item.company.fa,
-        tickerEn: item.company.en,
-        locationHub: 'tehran',
-      };
-
-      // In both Persian and English: Years increase strictly from LEFT to RIGHT.
-      // filteredExperiences is sorted Newest (idx=0: 2026/1404) to Oldest (idx=count-1: 2016/1395).
-      // Therefore, idx=0 (Newest) is on the RIGHT: chartWidth - chartPaddingX.
-      // idx=count-1 (Oldest) is on the LEFT: chartPaddingX.
-      let x = 0;
-      if (count === 1) {
-        x = chartWidth / 2;
-      } else {
-        const ratio = idx / (count - 1);
-        x = chartWidth - chartPaddingX - ratio * (chartWidth - 2 * chartPaddingX);
-      }
-
-      // Vertical elevation corresponds to project volume (higher volume = taller peak / higher on chart)
-      const normalizedScore = Math.max(30, Math.min(100, meta.volumeScore));
-      const y = chartHeight - chartBottomPadding - ((normalizedScore - 25) / 75) * chartUsableHeight;
-
-      return {
-        x,
-        y,
-        item,
-        meta,
-        idx,
-        score: meta.volumeScore,
-      };
+  // -------------------------------------------------------------
+  // LINEAR TIMELINE: Sorted Chronologically (Oldest 2016 -> Newest 2026)
+  // Left to Right in BOTH English and Persian!
+  // Alternating one above, one below the horizontal line!
+  // -------------------------------------------------------------
+  const chronologicalTimelineItems = useMemo(() => {
+    // Reverse filtered experiences so they increase left-to-right (2016 -> 2026)
+    return [...filteredExperiences].sort((a, b) => {
+      const scoreA = EXPERIENCE_CHRONO_MAP[a.id] || 0;
+      const scoreB = EXPERIENCE_CHRONO_MAP[b.id] || 0;
+      return scoreA - scoreB;
     });
   }, [filteredExperiences]);
 
-  // Construct continuous stock chart line path and area path
-  const { linePath, areaPath } = useMemo(() => {
-    if (chartPoints.length === 0) return { linePath: '', areaPath: '' };
+  // -------------------------------------------------------------
+  // RADAR / SPIDER CHART COORDINATES
+  // Center: (220, 220), Radius: 150
+  // -------------------------------------------------------------
+  const radarCenter = { x: 230, y: 220 };
+  const radarRadius = 150;
+  const numAxes = RADAR_DIMENSIONS.length;
 
-    // Sort points by X coordinate so SVG paths draw cleanly from left to right
-    const sortedByX = [...chartPoints].sort((a, b) => a.x - b.x);
-
-    const pointsStr = sortedByX
-      .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`)
-      .join(' ');
-
-    const baselineY = chartHeight - chartBottomPadding;
-    const firstX = sortedByX[0].x.toFixed(1);
-    const lastX = sortedByX[sortedByX.length - 1].x.toFixed(1);
-
-    const area = `${pointsStr} L ${lastX} ${baselineY} L ${firstX} ${baselineY} Z`;
-
-    return { linePath: pointsStr, areaPath: area };
-  }, [chartPoints]);
-
-  // Handle interactive mouse movements across stock chart
-  const handleChartMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!chartSvgRef.current) return;
-    const rect = chartSvgRef.current.getBoundingClientRect();
-    const clientX = e.clientX - rect.left;
-    const clientY = e.clientY - rect.top;
-
-    // Scale to SVG coordinate system (1100x300)
-    const svgX = (clientX / rect.width) * chartWidth;
-    const svgY = (clientY / rect.height) * chartHeight;
-
-    // Find nearest milestone point
-    let nearestPoint = chartPoints[0];
-    let minDistance = Infinity;
-
-    chartPoints.forEach((p) => {
-      const dist = Math.abs(p.x - svgX);
-      if (dist < minDistance) {
-        minDistance = dist;
-        nearestPoint = p;
-      }
+  // Concentric polygon web paths (20%, 40%, 60%, 80%, 100%)
+  const radarWebRings = useMemo(() => {
+    const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
+    return levels.map((lvl) => {
+      const points = Array.from({ length: numAxes }).map((_, i) => {
+        const angle = -Math.PI / 2 + i * ((2 * Math.PI) / numAxes);
+        const r = radarRadius * lvl;
+        const x = radarCenter.x + r * Math.cos(angle);
+        const y = radarCenter.y + r * Math.sin(angle);
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      });
+      return points.join(' ');
     });
+  }, [numAxes, radarCenter.x, radarCenter.y, radarRadius]);
 
-    setChartMouse({
-      x: svgX,
-      y: svgY,
-      active: true,
-      nearestId: nearestPoint ? nearestPoint.item.id : null,
+  // Data Polygon Path for actual competency scores
+  const radarDataPolygon = useMemo(() => {
+    const points = RADAR_DIMENSIONS.map((dim, i) => {
+      const angle = -Math.PI / 2 + i * ((2 * Math.PI) / numAxes);
+      const r = radarRadius * (dim.score / 100);
+      const x = radarCenter.x + r * Math.cos(angle);
+      const y = radarCenter.y + r * Math.sin(angle);
+      return { x, y, dim };
     });
-  };
-
-  const handleChartMouseLeave = () => {
-    setChartMouse((prev) => ({ ...prev, active: false }));
-  };
+    const pathStr = points.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+    return { pathStr, points };
+  }, [numAxes, radarCenter.x, radarCenter.y, radarRadius]);
 
   return (
-    <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 space-y-12 ${isFa ? 'text-right' : 'text-left'}`}>
+    <div className={`max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16 space-y-8 sm:space-y-12 ${isFa ? 'text-right' : 'text-left'}`}>
       {/* 1. PAGE HEADER */}
       <div className="space-y-4 max-w-3xl">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-neutral-100 text-neutral-800 rounded-full text-xs font-bold font-display uppercase tracking-wider">
           <span className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
-          <span>{lang === 'en' ? 'Interactive Career & Scope Chart' : 'چارت تعاملی سوابق و شاخص حجم پروژه‌ها'}</span>
+          <span>{lang === 'en' ? 'Career & Competency Matrix' : 'سوابق حرفه‌ای و ماتریس شایستگی‌های دیزاین'}</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-neutral-950 tracking-tight leading-tight">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-neutral-950 tracking-tight leading-tight">
           {lang === 'en'
             ? 'Professional Experience & Career Record'
             : 'سوابق حرفه‌ای، مدیریت هنری و پیشینه مهندسی'}
         </h1>
 
-        <p className="text-sm sm:text-base text-neutral-600 leading-relaxed font-medium">
+        <p className="text-xs sm:text-base text-neutral-600 leading-relaxed font-medium">
           {lang === 'en'
-            ? 'A financial-grade market chart mapping career milestones by project scale and volume — spanning 2026 back to civil engineering foundations with geographic distribution across Tehran, Urmia, and Istanbul.'
-            : 'تایم‌لاین تعاملی الهام‌گرفته از چارت بورس که ارتفاع هر ایستگاه زمانی بیانگر حجم، گستره و اهمیت پروژه است؛ با تفکیک دقیق مراکز فعالیت میان تهران، ارومیه و استانبول به ترتیب از جدیدترین به قدیمی‌ترین.'}
+            ? 'A chronological journey spanning 2016 to 2026 with alternating timeline milestones, paired with a multi-dimensional radar matrix of Art Direction, Packaging Dielines, and Prepress mastery.'
+            : 'تایم‌لاین خطی سوابق با چینش متناوب بالا و پایین (از ۱۳۹۵ تا ۱۴۰۴)، همراه با نمودار عنکبوتی شایستگی‌های چندبعدی مدیر هنری در بسته‌بندی، هویت و نظارت کارگاهی چاپ.'}
         </p>
       </div>
 
-      {/* 2. SCALE OVERVIEW METRIC CHIPS (Clean Light Aesthetic - NO Dark Outer Frame) */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all space-y-1.5 group">
+      {/* 2. SCALE OVERVIEW METRIC CHIPS (Organic Dossier Styling) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-neutral-200/90 shadow-2xs hover:shadow-xs transition-all space-y-1.5 group">
           <div className="flex items-center justify-between">
             <span className="text-2xl sm:text-3xl font-black font-display text-indigo-600 tracking-tight">
               {isFa ? '۷ پروژه' : '7 Flagships'}
             </span>
             <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 group-hover:scale-125 transition-transform" />
           </div>
-          <span className="text-xs text-slate-900 font-bold block">
+          <span className="text-xs text-neutral-900 font-bold block">
             {lang === 'en' ? 'Flagship & Major Scope' : 'پروژه‌های کلان، ۳۶۰° و شاخص'}
           </span>
-          <span className="text-[11px] text-slate-500 font-medium block">
+          <span className="text-[11px] text-neutral-500 font-medium block">
             {lang === 'en' ? 'Comprehensive B2B & Retail Systems' : 'سیستم‌های برندینگ، شلف و هویت'}
           </span>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all space-y-1.5 group">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-neutral-200/90 shadow-2xs hover:shadow-xs transition-all space-y-1.5 group">
           <div className="flex items-center justify-between">
             <span className="text-2xl sm:text-3xl font-black font-display text-rose-600 tracking-tight">
               {isFa ? '۲۰۰ صفحه' : '200 Pages'}
             </span>
             <span className="w-2.5 h-2.5 rounded-full bg-rose-600 group-hover:scale-125 transition-transform" />
           </div>
-          <span className="text-xs text-slate-900 font-bold block">
+          <span className="text-xs text-neutral-900 font-bold block">
             {lang === 'en' ? 'Medical Equipment Catalog' : 'کتاب مرجع ۳۱ کارخانه دارویی'}
           </span>
-          <span className="text-[11px] text-slate-500 font-medium block">
+          <span className="text-[11px] text-neutral-500 font-medium block">
             {lang === 'en' ? 'Editorial Architecture & Prepress' : 'تدوین و نظارت لیتوگرافی و افست'}
           </span>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all space-y-1.5 group">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-neutral-200/90 shadow-2xs hover:shadow-xs transition-all space-y-1.5 group">
           <div className="flex items-center justify-between">
             <span className="text-2xl sm:text-3xl font-black font-display text-emerald-600 tracking-tight">
               {isFa ? '۲۲ محصول' : '22 Products'}
             </span>
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 group-hover:scale-125 transition-transform" />
           </div>
-          <span className="text-xs text-slate-900 font-bold block">
+          <span className="text-xs text-neutral-900 font-bold block">
             {lang === 'en' ? '3D Cosmetic Visualizations' : 'مدل‌سازی و رندرینگ ۳D شلف'}
           </span>
-          <span className="text-[11px] text-slate-500 font-medium block">
+          <span className="text-[11px] text-neutral-500 font-medium block">
             {lang === 'en' ? 'Iran Mall Expo Exhibition Brochure' : 'پاویون نمایشگاهی ایران‌مال'}
           </span>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all space-y-1.5 group">
+        <div className="bg-[#121316] text-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-neutral-800 shadow-2xs hover:shadow-xs transition-all space-y-1.5 group">
           <div className="flex items-center justify-between">
-            <span className="text-xl sm:text-2xl font-black font-display text-violet-600 tracking-tight">
+            <span className="text-xl sm:text-2xl font-black font-display text-[#d4ff14] tracking-tight">
               {isFa ? 'مدیر هنری و خلاقیت' : 'Creative Director'}
             </span>
-            <span className="w-2.5 h-2.5 rounded-full bg-violet-600 group-hover:scale-125 transition-transform" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#d4ff14] group-hover:scale-125 transition-transform" />
           </div>
-          <span className="text-xs text-slate-900 font-bold block">
+          <span className="text-xs text-white font-bold block">
             {lang === 'en' ? 'Art & Creative Direction' : 'هدایت هنری و استراتژی بصری'}
           </span>
-          <span className="text-[11px] text-slate-500 font-medium block">
+          <span className="text-[11px] text-neutral-400 font-medium block">
             {lang === 'en' ? 'Packaging, Brand & Product Comms' : 'بسته‌بندی، هویت و ارتباطات برند'}
           </span>
         </div>
       </div>
 
-      {/* 3. GEOGRAPHIC BREAKDOWN & LOCATION DISTRIBUTION BAR */}
-      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
+      {/* 3. GEOGRAPHIC DISTRIBUTION BAR */}
+      <div className="bg-white p-5 sm:p-6 rounded-3xl border border-neutral-200/90 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
               <MapPin className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs sm:text-sm font-black text-slate-900 font-display block">
+              <span className="text-xs sm:text-sm font-black text-neutral-900 font-display block">
                 {lang === 'en' ? 'Geographic Distribution of Projects' : 'تفکیک مکانی و گستره جغرافیایی پروژه‌ها'}
               </span>
-              <span className="text-[11px] text-slate-500 font-medium">
-                {isFa ? 'توزیع پروژه‌های دیزاین و مهندسی میان تهران، ارومیه و استانبول' : 'Design & engineering hubs across Tehran, Urmia, and Istanbul'}
+              <span className="text-[11px] text-neutral-500 font-medium">
+                {lang === 'en'
+                  ? 'Design and engineering hubs across Tehran, Urmia, and Istanbul'
+                  : 'توزیع پروژه‌های دیزاین و مهندسی میان تهران، ارومیه و استانبول'}
               </span>
             </div>
           </div>
@@ -950,17 +1148,17 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
                   key={hub.id}
                   type="button"
                   onClick={() => setActiveLocation(hub.id)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer font-display ${
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer font-display ${
                     isSelected
-                      ? 'bg-slate-950 text-white shadow-xs'
-                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80'
+                      ? 'bg-neutral-950 text-white shadow-xs'
+                      : 'bg-neutral-50 hover:bg-neutral-100 text-neutral-700 border border-neutral-200/80'
                   }`}
                 >
                   <span className={`w-2 h-2 rounded-full ${hub.dotColor}`} />
                   <span>{lang === 'en' ? hub.nameEn : hub.nameFa}</span>
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                      isSelected ? 'bg-slate-800 text-white' : 'bg-slate-200/70 text-slate-600'
+                      isSelected ? 'bg-neutral-800 text-white' : 'bg-neutral-200/70 text-neutral-600'
                     }`}
                   >
                     {count}
@@ -972,8 +1170,8 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
         </div>
 
         {/* Visual Distribution Proportion Bar */}
-        <div className="space-y-2 pt-1 border-t border-slate-100">
-          <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden flex shadow-inner">
+        <div className="space-y-2 pt-1 border-t border-neutral-100">
+          <div className="h-2.5 rounded-full bg-neutral-100 overflow-hidden flex shadow-inner">
             <div
               style={{ width: `${locationStats.tehranPercent}%` }}
               className="bg-indigo-500 hover:bg-indigo-600 transition-all h-full"
@@ -991,30 +1189,30 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
             />
           </div>
 
-          <div className="flex flex-wrap items-center justify-between text-[11px] font-bold font-mono text-slate-600 gap-2">
+          <div className="flex flex-wrap items-center justify-between text-[11px] font-bold font-mono text-neutral-600 gap-2">
             <span className="flex items-center gap-1.5 text-indigo-700">
               <span className="w-2 h-2 rounded-full bg-indigo-500 inline-block" />
-              {isFa
-                ? `تهران: ${locationStats.tehranPercent}٪ (${locationStats.tehranCount} پروژه)`
-                : `Tehran: ${locationStats.tehranPercent}% (${locationStats.tehranCount} proj)`}
+              {lang === 'en'
+                ? `Tehran: ${locationStats.tehranPercent}% (${locationStats.tehranCount} proj)`
+                : `تهران: ${locationStats.tehranPercent}٪ (${locationStats.tehranCount} پروژه)`}
             </span>
             <span className="flex items-center gap-1.5 text-emerald-700">
               <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-              {isFa
-                ? `ارومیه: ${locationStats.urmiaPercent}٪ (${locationStats.urmiaCount} پروژه)`
-                : `Urmia: ${locationStats.urmiaPercent}% (${locationStats.urmiaCount} proj)`}
+              {lang === 'en'
+                ? `Urmia: ${locationStats.urmiaPercent}% (${locationStats.urmiaCount} proj)`
+                : `ارومیه: ${locationStats.urmiaPercent}٪ (${locationStats.urmiaCount} پروژه)`}
             </span>
             <span className="flex items-center gap-1.5 text-amber-800">
               <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
-              {isFa
-                ? `استانبول و بین‌المللی: ${locationStats.globalPercent}٪ (${locationStats.globalCount} پروژه)`
-                : `Istanbul & Global: ${locationStats.globalPercent}% (${locationStats.globalCount} proj)`}
+              {lang === 'en'
+                ? `Istanbul & Global: ${locationStats.globalPercent}% (${locationStats.globalCount} proj)`
+                : `استانبول و بین‌المللی: ${locationStats.globalPercent}٪ (${locationStats.globalCount} پروژه)`}
             </span>
           </div>
         </div>
       </div>
 
-      {/* 4. CONTROLS BAR: CATEGORIES, SEARCH & VIEW TOGGLE */}
+      {/* 4. CONTROLS BAR: CATEGORIES, SEARCH & VIEW MODE SWITCHER */}
       <div className="space-y-3">
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-neutral-50 p-3 rounded-2xl border border-neutral-200/80">
           {/* Category Filter Pills */}
@@ -1053,48 +1251,63 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
             })}
           </div>
 
-          {/* Right Controls: Search & Desktop Mode Switcher */}
+          {/* Right Controls: Search & Primary View Switcher */}
           <div className="flex items-center gap-2">
-            <div className="relative flex-1 sm:w-64">
+            <div className="relative flex-1 sm:w-60">
               <Search className={`w-3.5 h-3.5 text-neutral-400 absolute top-1/2 -translate-y-1/2 ${isFa ? 'right-3' : 'left-3'}`} />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={lang === 'en' ? 'Search records, cities...' : 'جستجو در شرکت، شهر، نقش...'}
+                placeholder={lang === 'en' ? 'Search records...' : 'جستجو در شرکت، شهر...'}
                 className={`w-full text-xs font-medium bg-white border border-neutral-200 rounded-xl py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
                   isFa ? 'pr-9 pl-3 text-right' : 'pl-9 pr-3 text-left'
                 }`}
               />
             </div>
 
-            {/* Desktop View Switcher: Financial Stock Chart vs Bento Grid */}
-            <div className="hidden lg:flex items-center bg-white border border-neutral-200 rounded-xl p-0.5">
+            {/* View Mode Switcher: Linear Timeline vs Radar Matrix vs All Cards */}
+            <div className="flex items-center bg-white border border-neutral-200 rounded-xl p-0.5 shadow-2xs shrink-0">
               <button
                 type="button"
-                onClick={() => setDesktopView('timeline_chart')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 ${
-                  desktopView === 'timeline_chart'
-                    ? 'bg-indigo-600 text-white'
+                onClick={() => setViewMode('linear_timeline')}
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 sm:gap-1.5 ${
+                  viewMode === 'linear_timeline'
+                    ? 'bg-neutral-950 text-white'
                     : 'text-neutral-600 hover:text-neutral-950'
                 }`}
-                title={lang === 'en' ? 'Stock Chart' : 'چارت بورس'}
+                title={lang === 'en' ? 'Alternating Linear Timeline' : 'تایم‌لاین خطی متناوب'}
               >
-                <LineChart className="w-3.5 h-3.5" />
-                <span>{lang === 'en' ? 'Chart' : 'چارت'}</span>
+                <TrendingUp className="w-3.5 h-3.5" />
+                <span>{lang === 'en' ? 'Timeline' : 'تایم‌لاین'}</span>
               </button>
+
               <button
                 type="button"
-                onClick={() => setDesktopView('all_grid')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 ${
-                  desktopView === 'all_grid'
+                onClick={() => setViewMode('radar_matrix')}
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 sm:gap-1.5 ${
+                  viewMode === 'radar_matrix'
                     ? 'bg-indigo-600 text-white'
                     : 'text-neutral-600 hover:text-neutral-950'
                 }`}
-                title={lang === 'en' ? 'Grid View' : 'نمای کارت‌ها'}
+                title={lang === 'en' ? 'Spider / Radar Matrix' : 'نمودار عنکبوتی شایستگی‌ها'}
+              >
+                <Radar className="w-3.5 h-3.5" />
+                <span>{lang === 'en' ? 'Spider' : 'عنکبوتی'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setViewMode('all_cards')}
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 sm:gap-1.5 ${
+                  viewMode === 'all_cards'
+                    ? 'bg-neutral-950 text-white'
+                    : 'text-neutral-600 hover:text-neutral-950'
+                }`}
+                title={lang === 'en' ? 'All Dossiers' : 'همه پرونده‌ها'}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
-                <span>{lang === 'en' ? 'All Cards' : 'همه کارت‌ها'}</span>
+                <span>{lang === 'en' ? 'Dossiers' : 'پرونده‌ها'}</span>
               </button>
             </div>
           </div>
@@ -1122,13 +1335,11 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
         )}
       </div>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* 5. MAIN PRESENTATION: FINANCIAL STOCK CHART & SPOTLIGHT CARD */}
-      {/* ------------------------------------------------------------------ */}
-
+      {/* ------------------------------------------------------------- */}
+      {/* 5. MAIN PRESENTATION: LINEAR TIMELINE, RADAR MATRIX OR ALL CARDS */}
+      {/* ------------------------------------------------------------- */}
       {filteredExperiences.length === 0 ? (
-        /* EMPTY STATE */
-        <div className="text-center py-16 bg-neutral-50 rounded-2xl border border-neutral-200/80 space-y-3">
+        <div className="text-center py-16 bg-neutral-50 rounded-3xl border border-neutral-200/80 space-y-3">
           <p className="text-sm font-bold text-neutral-600">
             {lang === 'en'
               ? 'No experience records match your search criteria.'
@@ -1146,727 +1357,876 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
           </button>
         </div>
       ) : (
-        <>
-          {/* ============================================================= */}
-          {/* A. DESKTOP VIEW: FINANCIAL STOCK CHART (چارت بورس) & SPOTLIGHT */}
-          {/* ============================================================= */}
-          <div className="hidden lg:block space-y-8">
-            {desktopView === 'timeline_chart' ? (
-              <div className="space-y-8">
-                {/* 1. STOCK MARKET CHART CONTAINER (چارت بورس) */}
-                <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 space-y-5 relative overflow-hidden">
-                  {/* Stepper Navigation & Ticker Header */}
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-100 flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-ping" />
-                          {isFa
-                            ? `ایستگاه ${currentSpotlightIndex + 1} از ${filteredExperiences.length}`
-                            : `Milestone ${currentSpotlightIndex + 1} of ${filteredExperiences.length}`}
+        <div className="space-y-10">
+          {/* VIEW MODE 1: ALTERNATING LINEAR TIMELINE */}
+          {viewMode === 'linear_timeline' && (
+            <div className="space-y-8">
+              {/* Timeline Container: Adaptive Mobile Scrubber + Desktop Alternating Timeline */}
+              {(() => {
+                const activePalette = MILESTONE_PALETTES[currentSpotlightItem.id] || MILESTONE_PALETTES['exp_rst'];
+
+                return (
+                  <div className="space-y-6">
+                    {/* 1. TOP HEADER & NAVIGATION BAR */}
+                    <div className="bg-white rounded-3xl border border-neutral-200/90 shadow-sm p-5 sm:p-7 space-y-5">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+                        <div className="space-y-1.5">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span
+                              style={{ backgroundColor: `${activePalette.accentHex}20`, color: activePalette.accentHex, borderColor: `${activePalette.accentHex}40` }}
+                              className="font-mono text-xs font-black px-3 py-1 rounded-full border flex items-center gap-1.5"
+                            >
+                              <span
+                                style={{ backgroundColor: activePalette.accentHex }}
+                                className="w-2 h-2 rounded-full animate-ping"
+                              />
+                              {lang === 'en'
+                                ? `Milestone ${currentSpotlightIndex + 1} of ${filteredExperiences.length}`
+                                : `ایستگاه ${currentSpotlightIndex + 1} از ${filteredExperiences.length}`}
+                            </span>
+                            <span className="text-xs text-neutral-300">·</span>
+                            <span className="text-xs font-bold text-neutral-700 font-mono">
+                              {EXPERIENCE_SCALE_MAP[currentSpotlightItem.id]?.[isFa ? 'timelineYearFa' : 'timelineYearEn'] ||
+                                currentSpotlightItem.period[lang]}
+                            </span>
+                          </div>
+
+                          <h3 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight flex flex-wrap items-center gap-2">
+                            <span>{currentSpotlightItem.company[lang]}</span>
+                            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-600 font-display">
+                              {EXPERIENCE_SCALE_MAP[currentSpotlightItem.id]?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] ||
+                                currentSpotlightItem.location[lang]}
+                            </span>
+                          </h3>
+                        </div>
+
+                        {/* Stepper Controls (Accessible on Mobile and Desktop) */}
+                        <div className="flex items-center gap-2 self-end sm:self-auto">
+                          <button
+                            type="button"
+                            onClick={handlePrevSpotlight}
+                            disabled={currentSpotlightIndex === 0}
+                            className={`p-2.5 sm:p-3 rounded-2xl border transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold ${
+                              currentSpotlightIndex === 0
+                                ? 'opacity-30 border-neutral-200 text-neutral-400 cursor-not-allowed'
+                                : 'border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 shadow-2xs hover:border-neutral-400 active:scale-95'
+                            }`}
+                            title={lang === 'en' ? 'Previous Milestone' : 'ایستگاه قبلی (جدیدتر)'}
+                          >
+                            <PrevChevron className="w-4 h-4" />
+                            <span className="hidden sm:inline">{lang === 'en' ? 'Prev' : 'قبلی'}</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={handleNextSpotlight}
+                            disabled={currentSpotlightIndex === filteredExperiences.length - 1}
+                            className={`p-2.5 sm:p-3 rounded-2xl border transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold ${
+                              currentSpotlightIndex === filteredExperiences.length - 1
+                                ? 'opacity-30 border-neutral-200 text-neutral-400 cursor-not-allowed'
+                                : 'border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 shadow-2xs hover:border-neutral-400 active:scale-95'
+                            }`}
+                            title={lang === 'en' ? 'Next Milestone' : 'ایستگاه بعدی (قدیمی‌تر)'}
+                          >
+                            <span className="hidden sm:inline">{lang === 'en' ? 'Next' : 'بعدی'}</span>
+                            <NextChevron className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Subtitle Guideline */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] font-bold text-neutral-500 font-mono gap-2">
+                        <span className="flex items-center gap-1.5">
+                          <span
+                            style={{ backgroundColor: activePalette.accentHex }}
+                            className="w-2 h-2 rounded-full inline-block"
+                          />
+                          {lang === 'en'
+                            ? 'Color-Coded Milestones: Each station has a distinct signature palette'
+                            : 'تفکیک رنگی سوابق: هر ایستگاه دارای پالت رنگی و هویتی اختصاصی است'}
                         </span>
-                        <span className="text-xs text-slate-300">·</span>
-                        <span className="text-xs font-bold text-slate-700 font-mono">
-                          {EXPERIENCE_SCALE_MAP[currentSpotlightItem.id]?.[isFa ? 'timelineYearFa' : 'timelineYearEn'] ||
-                            currentSpotlightItem.period[lang]}
-                        </span>
-                        <span className="text-xs text-slate-300">·</span>
-                        <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60 font-mono">
-                          {isFa
-                            ? `حجم و شاخص: ${EXPERIENCE_SCALE_MAP[currentSpotlightItem.id]?.volumeScore || 70}٪`
-                            : `Scope Index: ${EXPERIENCE_SCALE_MAP[currentSpotlightItem.id]?.volumeScore || 70}%`}
+                        <span className="text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-100 self-start sm:self-auto">
+                          {lang === 'en'
+                            ? 'Chronological Order: 2016 (Left) → 2026 (Right)'
+                            : 'ترتیب زمانی: ۱۳۹۵ (چپ) → ۱۴۰۴ (راست)'}
                         </span>
                       </div>
-                      <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
-                        <span>{currentSpotlightItem.company[lang]}</span>
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-display">
-                          {EXPERIENCE_SCALE_MAP[currentSpotlightItem.id]?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] ||
-                            currentSpotlightItem.location[lang]}
-                        </span>
-                      </h3>
-                    </div>
 
-                    {/* Stepper Controls */}
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={handlePrevSpotlight}
-                        disabled={currentSpotlightIndex === 0}
-                        className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
-                          currentSpotlightIndex === 0
-                            ? 'opacity-30 border-slate-200 text-slate-400 cursor-not-allowed'
-                            : 'border-slate-300 bg-white hover:bg-slate-50 text-slate-800 shadow-2xs hover:border-indigo-400'
-                        }`}
-                        title={lang === 'en' ? 'Previous Milestone' : 'ایستگاه قبلی (جدیدتر)'}
-                      >
-                        <PrevChevron className="w-4 h-4" />
-                      </button>
+                      {/* 2. DEDICATED MOBILE MILESTONE SCRUBBER (< md screens) */}
+                      <div className="block md:hidden pt-2">
+                        <div className="text-[11px] font-bold text-neutral-500 mb-2">
+                          {lang === 'en' ? 'Swipe milestones to select:' : 'سوابق را ورق بزنید و انتخاب کنید:'}
+                        </div>
+                        <div
+                          className="overflow-x-auto pb-3 pt-1 -mx-2 px-2 flex items-center gap-2 select-none snap-x"
+                          dir="ltr"
+                        >
+                          {chronologicalTimelineItems.map((item) => {
+                            const isSelected = item.id === currentSpotlightItem.id;
+                            const palette = MILESTONE_PALETTES[item.id] || MILESTONE_PALETTES['exp_rst'];
+                            const meta = EXPERIENCE_SCALE_MAP[item.id];
+                            const yearStr = meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang];
 
-                      <button
-                        type="button"
-                        onClick={handleNextSpotlight}
-                        disabled={currentSpotlightIndex === filteredExperiences.length - 1}
-                        className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
-                          currentSpotlightIndex === filteredExperiences.length - 1
-                            ? 'opacity-30 border-slate-200 text-slate-400 cursor-not-allowed'
-                            : 'border-slate-300 bg-white hover:bg-slate-50 text-slate-800 shadow-2xs hover:border-indigo-400'
-                        }`}
-                        title={lang === 'en' ? 'Next Milestone' : 'ایستگاه بعدی (قدیمی‌تر)'}
-                      >
-                        <NextChevron className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Financial Stock Chart Legend & Indicators */}
-                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 font-mono">
-                    <span className="flex items-center gap-1.5">
-                      <TrendingUp className="w-3.5 h-3.5 text-indigo-600" />
-                      {isFa
-                        ? 'ارتفاع منحنی = شاخص حجم و گستره پروژه'
-                        : 'Curve Elevation = Project Scale & Volume Index'}
-                    </span>
-                    <span className="text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-100 font-bold">
-                      {isFa
-                        ? 'روند سال‌ها: از چپ به راست افزایش سال‌ها (۱۳۹۵ تا ۱۴۰۴ اکنون)'
-                        : 'Timeline: Left to Right Chronological (2016 to 2026 Now)'}
-                    </span>
-                  </div>
-
-                  {/* SVG STOCK MARKET CANVAS (چارت بورس با انیمیشن ماوس) */}
-                  <div
-                    className="relative w-full rounded-2xl bg-linear-to-b from-slate-50/70 via-white to-slate-50/40 border border-slate-200/80 p-2 overflow-hidden select-none"
-                    dir="ltr"
-                  >
-                    <svg
-                      ref={chartSvgRef}
-                      viewBox={`0 0 ${chartWidth} ${chartHeight}`}
-                      className="w-full h-72 sm:h-80 cursor-crosshair"
-                      onMouseMove={handleChartMouseMove}
-                      onMouseLeave={handleChartMouseLeave}
-                      onClick={() => {
-                        if (chartMouse.nearestId) {
-                          setSelectedExperienceId(chartMouse.nearestId);
-                        }
-                      }}
-                    >
-                      <defs>
-                        {/* Area gradient for stock market volume fill */}
-                        <linearGradient id="stockAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#6366f1" stopOpacity="0.32" />
-                          <stop offset="60%" stopColor="#818cf8" stopOpacity="0.10" />
-                          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.0" />
-                        </linearGradient>
-
-                        {/* Chart Line Gradient */}
-                        <linearGradient id="stockLineGradient" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stopColor="#4f46e5" />
-                          <stop offset="50%" stopColor="#6366f1" />
-                          <stop offset="100%" stopColor="#059669" />
-                        </linearGradient>
-
-                        {/* Glow Filter for Active Nodes */}
-                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#4f46e5" floodOpacity="0.5" />
-                        </filter>
-                      </defs>
-
-                      {/* Financial Grid Lines & Volume Benchmarks */}
-                      {[100, 75, 50, 25].map((level) => {
-                        const levelY =
-                          chartHeight -
-                          chartBottomPadding -
-                          ((level - 25) / 75) * chartUsableHeight;
-
-                        return (
-                          <g key={level} className="opacity-60">
-                            <line
-                              x1={chartPaddingX - 10}
-                              y1={levelY}
-                              x2={chartWidth - chartPaddingX + 10}
-                              y2={levelY}
-                              stroke="#e2e8f0"
-                              strokeDasharray="4 4"
-                              strokeWidth="1"
-                            />
-                            <text
-                              x={chartPaddingX - 14}
-                              y={levelY + 3}
-                              fill="#94a3b8"
-                              fontSize="10"
-                              fontFamily="monospace"
-                              textAnchor="end"
-                              className="font-bold"
-                            >
-                              {level === 100
-                                ? isFa ? '۱۰۰٪ مقیاس کلان ۳۶۰°' : '100% Flagship'
-                                : level === 75
-                                ? isFa ? '۷۵٪ گسترده' : '75% High'
-                                : level === 50
-                                ? isFa ? '۵۰٪ متمرکز' : '50% Mid'
-                                : isFa ? '۲۵٪ پایه' : '25% Base'}
-                            </text>
-                          </g>
-                        );
-                      })}
-
-                      {/* Continuous Stock Market Gradient Fill Area */}
-                      {areaPath && (
-                        <path d={areaPath} fill="url(#stockAreaGradient)" />
-                      )}
-
-                      {/* Continuous Stock Market Curve Line */}
-                      {linePath && (
-                        <path
-                          d={linePath}
-                          fill="none"
-                          stroke="url(#stockLineGradient)"
-                          strokeWidth="3.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="drop-shadow-xs"
-                        />
-                      )}
-
-                      {/* Baseline horizontal axis */}
-                      <line
-                        x1={chartPaddingX - 20}
-                        y1={chartHeight - chartBottomPadding}
-                        x2={chartWidth - chartPaddingX + 20}
-                        y2={chartHeight - chartBottomPadding}
-                        stroke="#cbd5e1"
-                        strokeWidth="2"
-                      />
-
-                      {/* Interactive Solid Vertical Guide Line Following Cursor (NO dashed lines, NO horizontal line) */}
-                      {chartMouse.active && (
-                        <line
-                          x1={chartMouse.x}
-                          y1={chartTopPadding - 15}
-                          x2={chartMouse.x}
-                          y2={chartHeight - chartBottomPadding}
-                          stroke="#4f46e5"
-                          strokeWidth="1.5"
-                          opacity="0.8"
-                          className="pointer-events-none"
-                        />
-                      )}
-
-                      {/* Candlestick Stems and Milestone Data Points */}
-                      {chartPoints.map((pt) => {
-                        const isSelected = pt.item.id === currentSpotlightItem.id;
-                        const isHovered = pt.item.id === chartMouse.nearestId && chartMouse.active;
-                        const meta = pt.meta;
-                        const baselineY = chartHeight - chartBottomPadding;
-
-                        // Hub specific colors
-                        const hubColor =
-                          meta.locationHub === 'tehran'
-                            ? '#4f46e5'
-                            : meta.locationHub === 'urmia'
-                            ? '#059669'
-                            : '#d97706';
-
-                        return (
-                          <g
-                            key={pt.item.id}
-                            className="cursor-pointer group"
-                            onClick={() => setSelectedExperienceId(pt.item.id)}
-                          >
-                            {/* Vertical Solid Stem Line (NO dashed lines) */}
-                            <line
-                              x1={pt.x}
-                              y1={pt.y}
-                              x2={pt.x}
-                              y2={baselineY}
-                              stroke={isSelected || isHovered ? hubColor : '#e2e8f0'}
-                              strokeWidth={isSelected || isHovered ? '2' : '1'}
-                              opacity={isSelected || isHovered ? 1 : 0.6}
-                            />
-
-                            {/* Base Footing Tick on Baseline Axis */}
-                            <circle
-                              cx={pt.x}
-                              cy={baselineY}
-                              r={isSelected ? 3.5 : 2}
-                              fill={isSelected ? hubColor : '#94a3b8'}
-                            />
-
-                            {/* Node Elevation Pulse Aura */}
-                            {isSelected && (
-                              <circle
-                                cx={pt.x}
-                                cy={pt.y}
-                                r="16"
-                                fill={hubColor}
-                                opacity="0.25"
-                                className="animate-ping"
-                              />
-                            )}
-
-                            {/* Outer Node Ring */}
-                            <circle
-                              cx={pt.x}
-                              cy={pt.y}
-                              r={isSelected ? 10 : isHovered ? 8 : 6}
-                              fill="#ffffff"
-                              stroke={hubColor}
-                              strokeWidth={isSelected ? 3.5 : 2}
-                              filter={isSelected ? 'url(#glow)' : undefined}
-                              className="transition-all duration-200"
-                            />
-
-                            {/* Inner Node Core */}
-                            <circle
-                              cx={pt.x}
-                              cy={pt.y}
-                              r={isSelected ? 4.5 : isHovered ? 3.5 : 2.5}
-                              fill={hubColor}
-                              className="transition-all duration-200"
-                            />
-
-                            {/* Horizontal Axis: ONLY Year Numbers (alternating tick lines for zero overlap) */}
-                            <g className="transition-all select-none">
-                              <line
-                                x1={pt.x}
-                                y1={baselineY}
-                                x2={pt.x}
-                                y2={pt.idx % 2 === 0 ? baselineY + 8 : baselineY + 20}
-                                stroke={isSelected ? '#4f46e5' : '#cbd5e1'}
-                                strokeWidth={isSelected ? '2' : '1'}
-                              />
-                              <text
-                                x={pt.x}
-                                y={pt.idx % 2 === 0 ? baselineY + 20 : baselineY + 34}
-                                fill={isSelected ? '#4f46e5' : '#475569'}
-                                fontSize="10.5"
-                                fontFamily="monospace"
-                                fontWeight={isSelected ? '900' : '700'}
-                                textAnchor="middle"
-                                className="transition-colors"
+                            return (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => setSelectedExperienceId(item.id)}
+                                style={
+                                  isSelected
+                                    ? {
+                                        borderColor: palette.accentHex,
+                                        boxShadow: `0 4px 14px -2px ${palette.glowRgba}`,
+                                      }
+                                    : undefined
+                                }
+                                className={`shrink-0 snap-center px-3.5 py-2 rounded-2xl border text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                                  isSelected
+                                    ? `${palette.pillSelectedClass} scale-102`
+                                    : 'bg-neutral-50 hover:bg-neutral-100 text-neutral-700 border-neutral-200'
+                                }`}
                               >
-                                {isFa ? meta.timelineYearFa : meta.timelineYearEn}
-                              </text>
-                            </g>
-                          </g>
-                        );
-                      })}
-                    </svg>
+                                <span
+                                  style={{ backgroundColor: palette.accentHex }}
+                                  className="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs"
+                                />
+                                <span className="font-mono text-xs">{yearStr}</span>
+                                <span className="max-w-[110px] truncate text-[11px] font-medium opacity-90">
+                                  {item.company[lang].split('|')[0].trim()}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* 3. DESKTOP ALTERNATING TIMELINE (hidden on mobile, visible on md and up) */}
+                      <div className="hidden md:block overflow-x-auto pb-4 pt-2 -mx-2 px-2 select-none" dir="ltr">
+                        <div className="min-w-[960px] py-12 px-6 relative">
+                          {/* Continuous Baseline Track */}
+                          <div className="absolute top-1/2 left-6 right-6 h-1 bg-neutral-200 -translate-y-1/2 rounded-full z-0" />
+                          <div className="absolute top-1/2 left-6 right-6 h-0.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-amber-500 -translate-y-1/2 rounded-full z-0 opacity-80" />
+
+                          {/* Nodes and Alternating Top/Bottom Cards */}
+                          <div className="relative z-10 flex items-center justify-between">
+                            {chronologicalTimelineItems.map((item, idx) => {
+                              const isEven = idx % 2 === 0; // Even: ABOVE the line | Odd: BELOW the line
+                              const isSelected = item.id === currentSpotlightItem.id;
+                              const palette = MILESTONE_PALETTES[item.id] || MILESTONE_PALETTES['exp_rst'];
+                              const meta = EXPERIENCE_SCALE_MAP[item.id];
+                              const yearStr = meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang];
+
+                              return (
+                                <div
+                                  key={item.id}
+                                  onClick={() => setSelectedExperienceId(item.id)}
+                                  className="flex flex-col items-center cursor-pointer group relative flex-1"
+                                >
+                                  {/* TOP CARD (For Even Indices) */}
+                                  {isEven ? (
+                                    <div className="mb-4 flex flex-col items-center transition-all duration-300 group-hover:-translate-y-1">
+                                      <div
+                                        style={
+                                          isSelected
+                                            ? {
+                                                borderColor: palette.accentHex,
+                                                boxShadow: `0 8px 24px -4px ${palette.glowRgba}`,
+                                              }
+                                            : undefined
+                                        }
+                                        className={`p-3 rounded-2xl border text-center transition-all duration-200 max-w-[150px] ${
+                                          isSelected
+                                            ? 'bg-neutral-950 text-white shadow-md ring-2 scale-105'
+                                            : 'bg-white hover:bg-neutral-50 border-neutral-200 shadow-2xs'
+                                        }`}
+                                      >
+                                        <span
+                                          style={{ color: palette.accentHex }}
+                                          className="text-[10px] font-mono font-bold block"
+                                        >
+                                          {yearStr}
+                                        </span>
+                                        <h4
+                                          className={`text-xs font-black truncate max-w-[130px] ${
+                                            isSelected ? 'text-white' : 'text-neutral-900'
+                                          }`}
+                                        >
+                                          {item.company[lang]}
+                                        </h4>
+                                        <span
+                                          className={`text-[10px] block truncate max-w-[130px] font-medium ${
+                                            isSelected ? 'text-neutral-300' : 'text-neutral-500'
+                                          }`}
+                                        >
+                                          {meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] || item.location[lang]}
+                                        </span>
+                                      </div>
+                                      {/* Stem connecting down to circle */}
+                                      <div
+                                        style={{ backgroundColor: isSelected ? palette.accentHex : undefined }}
+                                        className={`w-0.5 h-6 transition-colors ${
+                                          isSelected ? '' : 'bg-neutral-300 group-hover:bg-neutral-400'
+                                        }`}
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div className="h-[92px] w-full" />
+                                  )}
+
+                                  {/* CENTER NODE CIRCLE (With Distinct Milestone Color) */}
+                                  <div className="relative flex items-center justify-center my-1">
+                                    {isSelected && (
+                                      <span
+                                        style={{ backgroundColor: palette.glowRgba }}
+                                        className="absolute w-8 h-8 rounded-full animate-ping"
+                                      />
+                                    )}
+                                    <div
+                                      style={{
+                                        borderColor: isSelected ? palette.accentHex : undefined,
+                                        backgroundColor: isSelected ? palette.accentHex : 'white',
+                                      }}
+                                      className={`w-5 h-5 rounded-full border-2 transition-all duration-300 flex items-center justify-center z-10 ${
+                                        isSelected
+                                          ? 'scale-125 shadow-sm'
+                                          : 'border-neutral-400 group-hover:border-neutral-900 group-hover:scale-110'
+                                      }`}
+                                    >
+                                      <div
+                                        style={{
+                                          backgroundColor: isSelected ? '#121316' : palette.accentHex,
+                                        }}
+                                        className="w-2 h-2 rounded-full transition-colors"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  {/* BOTTOM CARD (For Odd Indices) */}
+                                  {!isEven ? (
+                                    <div className="mt-4 flex flex-col items-center transition-all duration-300 group-hover:translate-y-1">
+                                      {/* Stem connecting up to circle */}
+                                      <div
+                                        style={{ backgroundColor: isSelected ? palette.accentHex : undefined }}
+                                        className={`w-0.5 h-6 transition-colors ${
+                                          isSelected ? '' : 'bg-neutral-300 group-hover:bg-neutral-400'
+                                        }`}
+                                      />
+                                      <div
+                                        style={
+                                          isSelected
+                                            ? {
+                                                borderColor: palette.accentHex,
+                                                boxShadow: `0 8px 24px -4px ${palette.glowRgba}`,
+                                              }
+                                            : undefined
+                                        }
+                                        className={`p-3 rounded-2xl border text-center transition-all duration-200 max-w-[150px] ${
+                                          isSelected
+                                            ? 'bg-neutral-950 text-white shadow-md ring-2 scale-105'
+                                            : 'bg-white hover:bg-neutral-50 border-neutral-200 shadow-2xs'
+                                        }`}
+                                      >
+                                        <span
+                                          style={{ color: palette.accentHex }}
+                                          className="text-[10px] font-mono font-bold block"
+                                        >
+                                          {yearStr}
+                                        </span>
+                                        <h4
+                                          className={`text-xs font-black truncate max-w-[130px] ${
+                                            isSelected ? 'text-white' : 'text-neutral-900'
+                                          }`}
+                                        >
+                                          {item.company[lang]}
+                                        </h4>
+                                        <span
+                                          className={`text-[10px] block truncate max-w-[130px] font-medium ${
+                                            isSelected ? 'text-neutral-300' : 'text-neutral-500'
+                                          }`}
+                                        >
+                                          {meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] || item.location[lang]}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="h-[92px] w-full" />
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 4. SPOTLIGHT SHOWCASE: UNIQUE COLOR-THEMED ORGANIC DOSSIER CARD */}
+                    {(() => {
+                      const item = currentSpotlightItem;
+                      const meta = EXPERIENCE_SCALE_MAP[item.id];
+                      const isFlagship = meta?.tier === 'flagship';
+                      const highlights = item.highlights[lang] || [];
+                      const asymmetricShape = isFa
+                        ? 'rounded-tl-[24px] sm:rounded-tl-[36px] rounded-b-[24px] sm:rounded-b-[36px] rounded-tr-none'
+                        : 'rounded-tr-[24px] sm:rounded-tr-[36px] rounded-b-[24px] sm:rounded-b-[36px] rounded-tl-none';
+
+                      return (
+                        <div className="relative group pt-4">
+                          {/* Top Manila Folder Tab with Distinct Milestone Color */}
+                          <div className="flex items-center justify-between px-2">
+                            <div
+                              className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-t-2xl font-mono text-xs font-black tracking-wider uppercase z-10 -mb-px border-t border-x ${activePalette.tabBgClass}`}
+                            >
+                              <span
+                                style={{ backgroundColor: activePalette.accentHex }}
+                                className="w-2.5 h-2.5 rounded-full animate-pulse shrink-0"
+                              />
+                              <span>
+                                // {lang === 'en' ? 'DOSSIER' : 'پرونده'} {currentSpotlightIndex + 1 < 10 ? `0${currentSpotlightIndex + 1}` : currentSpotlightIndex + 1} · {item.badge}
+                              </span>
+                            </div>
+
+                            <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase hidden sm:inline">
+                              REF: EXP-0{currentSpotlightIndex + 1}-{item.id.replace('exp_', '').toUpperCase()}
+                            </span>
+                          </div>
+
+                          {/* Main Organic Dossier Container with Milestone Color Theming */}
+                          <div
+                            style={{
+                              boxShadow: `0 24px 50px -15px ${activePalette.glowRgba}`,
+                            }}
+                            className={`${asymmetricShape} p-5 sm:p-8 md:p-10 space-y-6 sm:space-y-8 shadow-xl transition-all border ${activePalette.cardBorderClass} ${activePalette.cardBgClass}`}
+                          >
+                            {/* Header Row with Badges & City */}
+                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-white/10 pb-6">
+                              <div className="space-y-2">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  {isFlagship && (
+                                    <span
+                                      style={{ backgroundColor: activePalette.accentHex, color: '#09090b' }}
+                                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full font-black text-xs font-display shadow-2xs"
+                                    >
+                                      <Star className="w-3.5 h-3.5 fill-current text-current" />
+                                      <span>{lang === 'en' ? 'Flagship Project' : 'پروژه کلان و شاخص'}</span>
+                                    </span>
+                                  )}
+
+                                  <span className="text-xs font-bold px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white font-display flex items-center gap-1.5">
+                                    <MapPin
+                                      style={{ color: activePalette.accentHex }}
+                                      className="w-3.5 h-3.5"
+                                    />
+                                    <span>{meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] || item.location[lang]}</span>
+                                  </span>
+
+                                  <span
+                                    style={{ borderColor: `${activePalette.accentHex}50`, color: activePalette.accentHex }}
+                                    className="text-xs font-mono font-bold px-3 py-1 rounded-full border bg-white/5"
+                                  >
+                                    {meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang]}
+                                  </span>
+                                </div>
+
+                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                                  {item.company[lang]}
+                                </h3>
+
+                                <div
+                                  style={{ color: activePalette.accentHex }}
+                                  className="text-sm sm:text-base font-bold font-display"
+                                >
+                                  {item.role[lang]}
+                                </div>
+                              </div>
+
+                              {/* Prepress Proof Stamp with Milestone Accent */}
+                              <div
+                                style={{
+                                  borderColor: `${activePalette.accentHex}50`,
+                                  color: activePalette.accentHex,
+                                }}
+                                className="px-4 py-2 rounded-2xl border font-mono text-xs font-bold flex flex-col items-start sm:items-end bg-white/5 self-start sm:self-auto"
+                              >
+                                <span className="text-[10px] text-neutral-400 block font-display">
+                                  {lang === 'en' ? 'VERIFIED RECORD' : 'سند معتبر استودیو'}
+                                </span>
+                                <span>[ ISO 12647-2 PRE-PRESS ]</span>
+                              </div>
+                            </div>
+
+                            {/* Scope & Highlights Description */}
+                            <div className="space-y-4">
+                              <div
+                                style={{ borderColor: `${activePalette.accentHex}30` }}
+                                className="p-4 rounded-2xl border text-xs sm:text-sm font-medium leading-relaxed bg-white/5 text-neutral-200"
+                              >
+                                <span
+                                  style={{ color: activePalette.accentHex }}
+                                  className="font-bold block mb-1"
+                                >
+                                  {lang === 'en' ? '// Scope & Architecture:' : '// دامنه شمول و معماری پروژه:'}
+                                </span>
+                                {meta ? (lang === 'en' ? meta.scopeBadgeEn : meta.scopeBadgeFa) : item.type[lang]}
+                              </div>
+
+                              <p className="text-sm sm:text-base leading-relaxed font-medium text-neutral-300">
+                                {item.summary[lang]}
+                              </p>
+                            </div>
+
+                            {/* Concrete Deliverable Bullet Highlights */}
+                            <div className="space-y-3 pt-2">
+                              <span className="text-xs font-mono font-bold tracking-wider uppercase block text-neutral-400">
+                                {lang === 'en'
+                                  ? `Key Deliverables & Responsibilities (${highlights.length}):`
+                                  : `دستاوردها و خروجی‌های تخصصی (${highlights.length} مورد):`}
+                              </span>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {highlights.map((h, hIdx) => (
+                                  <div
+                                    key={hIdx}
+                                    className="p-3.5 rounded-2xl border border-white/10 text-xs font-medium flex items-start gap-2.5 bg-white/5 text-neutral-200"
+                                  >
+                                    <CheckCircle2
+                                      style={{ color: activePalette.accentHex }}
+                                      className="w-4 h-4 shrink-0 mt-0.5"
+                                    />
+                                    <span className="leading-snug">{h}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Bottom Footer Actions */}
+                            <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+                              <button
+                                type="button"
+                                onClick={() => onNavigate('work')}
+                                className={`px-6 py-3 rounded-full text-xs font-black font-display inline-flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm ${activePalette.buttonClass}`}
+                              >
+                                <span>{lang === 'en' ? 'Explore Commercial Portfolio' : 'مشاهده پروژه‌ها در نمونه‌کارها'}</span>
+                                <ArrowIcon className="w-4 h-4" />
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => onNavigate('contact')}
+                                className="px-5 py-3 rounded-full text-xs font-bold border border-white/20 text-white hover:bg-white/10 transition-colors cursor-pointer text-center"
+                              >
+                                <span>{lang === 'en' ? 'Inquire About Similar Scope' : 'استعلام پروژه مشابه'}</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* VIEW MODE 2: INTERACTIVE SPIDER / RADAR CHART */}
+          {viewMode === 'radar_matrix' && (
+            <div className="space-y-8">
+              <div className="bg-[#121316] text-white rounded-3xl border border-neutral-800 shadow-xl p-6 sm:p-10 space-y-8 relative overflow-hidden">
+                {/* Header */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-neutral-800 pb-6">
+                  <div className="space-y-2 max-w-2xl">
+                    <span className="text-xs font-mono font-bold text-[#d4ff14] uppercase tracking-widest block">
+                      // MULTI-DIMENSIONAL RADAR MATRIX
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                      {lang === 'en'
+                        ? 'Creative & Engineering Competency Dimensions'
+                        : 'ماتریس شایستگی‌های چندبعدی مدیر هنری و مهندسی'}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-medium">
+                      {lang === 'en'
+                        ? 'Combining engineering discipline with pure artistic direction. Hover over any vertex to inspect tools, standards, and verified project outcomes.'
+                        : 'پیوند انضباط مهندسی با هدایت هنری اصیل؛ ماوس را روی هر رأس نمودار عنکبوتی ببرید تا ابزارها، استانداردها و تجربیات میدانی را مشاهده کنید.'}
+                    </p>
+                  </div>
+
+                  <div className="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-xs font-mono font-bold text-[#d4ff14] shrink-0">
+                    <span>96% AVERAGE EXPERTISE</span>
                   </div>
                 </div>
 
-                {/* 2. SPOTLIGHT SHOWCASE CARD (FOCUSED DETAIL FOR SELECTED POSITION) */}
-                {(() => {
-                  const item = currentSpotlightItem;
-                  const meta = EXPERIENCE_SCALE_MAP[item.id] || {
-                    tier: 'significant',
-                    scopeBadgeFa: item.type.fa,
-                    scopeBadgeEn: item.type.en,
-                    scopeMetricFa: item.type.fa,
-                    scopeMetricEn: item.type.en,
-                    yearFa: item.period.fa,
-                    yearEn: item.period.en,
-                    timelineYearFa: item.period.fa,
-                    timelineYearEn: item.period.en,
-                    volumeScore: 70,
-                    locationHub: 'tehran',
-                    cityLabelFa: item.location.fa,
-                    cityLabelEn: item.location.en,
-                    tickerFa: item.company.fa,
-                    tickerEn: item.company.en,
-                    colSpanDesktop: 'col-span-1',
-                    isHighImpact: false,
-                  };
-                  const isFlagship = meta.tier === 'flagship';
-                  const isCivil = item.category === 'civil_engineering';
-                  const theme = getCategoryTheme(item.category, meta.tier);
-                  const highlights = item.highlights[lang] || [];
-
-                  return (
-                    <div
-                      key={item.id}
-                      className={`bg-white rounded-3xl border transition-all duration-300 shadow-md p-8 sm:p-10 space-y-8 ${
-                        isFlagship
-                          ? 'border-indigo-200/90 ring-1 ring-indigo-100/80 bg-linear-to-b from-indigo-50/15 via-white to-white'
-                          : isCivil
-                          ? 'border-sky-200/90 bg-linear-to-b from-sky-50/15 to-white'
-                          : 'border-slate-200 bg-white'
-                      }`}
-                    >
-                      {/* Top Header & Badges */}
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-slate-100 pb-6">
-                        <div className="space-y-2">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span
-                              className={`w-7 h-7 rounded-xl font-mono font-bold text-xs flex items-center justify-center ${theme.counterBg}`}
-                            >
-                              {currentSpotlightIndex + 1 < 10
-                                ? `0${currentSpotlightIndex + 1}`
-                                : currentSpotlightIndex + 1}
-                            </span>
-
-                            {isFlagship && (
-                              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-600 text-white font-bold text-xs font-display shadow-2xs">
-                                <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
-                                <span>{lang === 'en' ? 'Flagship Engagement' : 'پروژه کلان و شاخص'}</span>
-                              </span>
-                            )}
-
-                            {/* Location City Tag Badge */}
-                            <span className="text-xs font-bold px-3 py-1 rounded-full border bg-slate-50 text-slate-700 border-slate-200 font-display flex items-center gap-1.5">
-                              <MapPin className="w-3.5 h-3.5 text-indigo-600" />
-                              <span>{meta[isFa ? 'cityLabelFa' : 'cityLabelEn']}</span>
-                            </span>
-
-                            <span
-                              className={`text-xs font-bold px-3 py-1 rounded-full border font-display flex items-center gap-1.5 ${theme.badge}`}
-                            >
-                              <span className={`w-1.5 h-1.5 rounded-full ${theme.dot}`} />
-                              <span>{item.badge}</span>
-                            </span>
-
-                            <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/60 font-mono">
-                              {item.period[lang]}
-                            </span>
-                          </div>
-
-                          <h2 className="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight leading-snug">
-                            {item.company[lang]}
-                          </h2>
-
-                          <div className="flex flex-wrap items-center gap-2 text-xs">
-                            <span className={`px-3 py-1 text-xs font-bold rounded-lg font-display ${theme.pillBg}`}>
-                              {item.role[lang]}
-                            </span>
-                            <span className="text-slate-300">·</span>
-                            <span className="text-slate-600 font-semibold">{item.type[lang]}</span>
-                            <span className="text-slate-300">·</span>
-                            <span className="text-slate-500 flex items-center gap-1 font-medium">
-                              <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                              {item.location[lang]}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Quantitative Scope Indicator Tag */}
-                        <div className="shrink-0 space-y-2">
-                          <div
-                            className={`p-3.5 rounded-2xl border flex items-center gap-2.5 text-xs font-bold font-display ${theme.scopeBg}`}
+                {/* Radar Grid and Interactive Inspection Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                  {/* SVG Spider Chart (7 cols) */}
+                  <div className="lg:col-span-7 flex flex-col items-center justify-center py-2 space-y-4">
+                    {/* Mobile quick-select competency pills */}
+                    <div className="flex lg:hidden flex-wrap items-center justify-center gap-1.5 w-full">
+                      {RADAR_DIMENSIONS.map((dim) => {
+                        const isSelected = (hoveredDimension || RADAR_DIMENSIONS[0]).id === dim.id;
+                        return (
+                          <button
+                            key={dim.id}
+                            type="button"
+                            onClick={() => setHoveredDimension(dim)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#d4ff14] text-neutral-950 font-black shadow-xs'
+                                : 'bg-white/10 text-neutral-300 hover:bg-white/20'
+                            }`}
                           >
-                            <TrendingUp className={`w-4 h-4 ${theme.scopeIcon}`} />
-                            <span className="leading-snug">
-                              {lang === 'en' ? meta.scopeBadgeEn : meta.scopeBadgeFa}
-                            </span>
-                          </div>
+                            <span>{isFa ? dim.labelFa : dim.labelEn}</span>
+                            <span className="opacity-75 text-[10px] ml-1 font-mono">({dim.score}%)</span>
+                          </button>
+                        );
+                      })}
+                    </div>
 
-                          <div className="flex items-center justify-end gap-2 text-xs font-mono font-bold text-slate-500">
-                            <span>{lang === 'en' ? 'Project Scale Volume:' : 'شاخص حجم و اسکیل:'}</span>
-                            <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                              {meta.volumeScore}%
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+                    <div className="relative w-full max-w-[340px] sm:max-w-[460px] aspect-square" dir="ltr">
+                      <svg viewBox="0 0 460 440" className="w-full h-full drop-shadow-2xl">
+                        <defs>
+                          <linearGradient id="radarAreaGradient" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stopColor="#d4ff14" stopOpacity="0.45" />
+                            <stop offset="100%" stopColor="#6366f1" stopOpacity="0.25" />
+                          </linearGradient>
+                          <filter id="radarGlow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#d4ff14" floodOpacity="0.6" />
+                          </filter>
+                        </defs>
 
-                      {/* Narrative Essence */}
-                      <div className="space-y-3">
-                        <h4 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
-                          {lang === 'en' ? 'Engagement Summary & Context' : 'شرح موقعیت و زمینه همکاری'}
-                        </h4>
-                        <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-medium max-w-4xl">
-                          {item.summary[lang]}
-                        </p>
-                      </div>
+                        {/* Concentric Spider Rings */}
+                        {radarWebRings.map((ringStr, rIdx) => (
+                          <polygon
+                            key={rIdx}
+                            points={ringStr}
+                            fill="none"
+                            stroke="#26282f"
+                            strokeWidth="1"
+                            strokeDasharray={rIdx === 4 ? undefined : '3 3'}
+                          />
+                        ))}
 
-                      {/* Deliverables & Milestones Grid */}
-                      {highlights.length > 0 && (
-                        <div className="space-y-4 pt-2">
-                          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                            <h4 className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                              <CheckCircle2 className={`w-4 h-4 ${theme.deliverableCheck}`} />
-                              <span>
-                                {lang === 'en'
-                                  ? `Key Deliverables & Responsibilities (${highlights.length})`
-                                  : `دستاوردها و خروجی‌های تخصصی (${highlights.length} مورد)`}
-                              </span>
-                            </h4>
-                          </div>
+                        {/* Concentric Percentage Benchmarks */}
+                        {[20, 40, 60, 80, 100].map((pct, idx) => (
+                          <text
+                            key={idx}
+                            x={radarCenter.x}
+                            y={radarCenter.y - (radarRadius * pct) / 100 - 3}
+                            fill="#52525b"
+                            fontSize="8"
+                            fontFamily="monospace"
+                            textAnchor="middle"
+                          >
+                            {pct}%
+                          </text>
+                        ))}
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {highlights.map((hl, hIdx) => (
-                              <div
-                                key={hIdx}
-                                className={`p-3.5 rounded-xl border flex items-start gap-2.5 text-xs sm:text-sm text-slate-800 leading-relaxed ${theme.deliverableCard}`}
+                        {/* Radial Spokes from Center to Outer Rim */}
+                        {Array.from({ length: numAxes }).map((_, i) => {
+                          const angle = -Math.PI / 2 + i * ((2 * Math.PI) / numAxes);
+                          const x2 = radarCenter.x + radarRadius * Math.cos(angle);
+                          const y2 = radarCenter.y + radarRadius * Math.sin(angle);
+                          return (
+                            <line
+                              key={i}
+                              x1={radarCenter.x}
+                              y1={radarCenter.y}
+                              x2={x2}
+                              y2={y2}
+                              stroke="#2a2c35"
+                              strokeWidth="1"
+                            />
+                          );
+                        })}
+
+                        {/* Filled Competency Polygon Web */}
+                        <polygon
+                          points={radarDataPolygon.pathStr}
+                          fill="url(#radarAreaGradient)"
+                          stroke="#d4ff14"
+                          strokeWidth="2.5"
+                          className="transition-all duration-300"
+                        />
+
+                        {/* Vertex Interactive Data Dots & Labels */}
+                        {radarDataPolygon.points.map((pt, i) => {
+                          const isHovered = hoveredDimension?.id === pt.dim.id;
+                          const labelAngle = -Math.PI / 2 + i * ((2 * Math.PI) / numAxes);
+                          const labelDistance = radarRadius + 28;
+                          const lx = radarCenter.x + labelDistance * Math.cos(labelAngle);
+                          const ly = radarCenter.y + labelDistance * Math.sin(labelAngle) + 4;
+
+                          return (
+                            <g
+                              key={pt.dim.id}
+                              className="cursor-pointer group"
+                              onMouseEnter={() => setHoveredDimension(pt.dim)}
+                              onClick={() => setHoveredDimension(pt.dim)}
+                            >
+                              {/* Pulse Aura */}
+                              {isHovered && (
+                                <circle
+                                  cx={pt.x}
+                                  cy={pt.y}
+                                  r="14"
+                                  fill="#d4ff14"
+                                  opacity="0.3"
+                                  className="animate-ping"
+                                />
+                              )}
+
+                              {/* Vertex Dot */}
+                              <circle
+                                cx={pt.x}
+                                cy={pt.y}
+                                r={isHovered ? 7 : 5}
+                                fill="#d4ff14"
+                                stroke="#121316"
+                                strokeWidth="2"
+                                filter={isHovered ? 'url(#radarGlow)' : undefined}
+                                className="transition-all duration-200"
+                              />
+
+                              {/* Axis Label */}
+                              <text
+                                x={lx}
+                                y={ly}
+                                fill={isHovered ? '#d4ff14' : '#a1a1aa'}
+                                fontSize="9"
+                                fontFamily="sans-serif"
+                                fontWeight={isHovered ? '900' : '700'}
+                                textAnchor={
+                                  Math.abs(Math.cos(labelAngle)) < 0.2
+                                    ? 'middle'
+                                    : Math.cos(labelAngle) > 0
+                                    ? 'start'
+                                    : 'end'
+                                }
+                                className="transition-colors"
                               >
-                                <span className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${theme.deliverableDot}`} />
-                                <span className="font-medium">{hl}</span>
-                              </div>
-                            ))}
+                                {isFa ? pt.dim.labelFa : pt.dim.labelEn} ({pt.dim.score}%)
+                              </text>
+                            </g>
+                          );
+                        })}
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Competency Deep Dive Card (5 cols) */}
+                  <div className="lg:col-span-5 space-y-4">
+                    {(() => {
+                      const activeDim = hoveredDimension || RADAR_DIMENSIONS[0];
+                      return (
+                        <div className="bg-white/5 border border-white/10 rounded-3xl p-6 sm:p-7 space-y-5">
+                          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                            <span className="font-mono text-xs font-bold text-[#d4ff14]">
+                              // {lang === 'en' ? 'SELECTED DIMENSION' : 'شاخص انتخاب‌شده'}
+                            </span>
+                            <span className="text-xl font-black font-mono text-[#d4ff14]">
+                              {activeDim.score}%
+                            </span>
+                          </div>
+
+                          <div className="space-y-2">
+                            <h4 className="text-xl font-black text-white">
+                              {isFa ? activeDim.labelFa : activeDim.labelEn}
+                            </h4>
+                            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-medium">
+                              {isFa ? activeDim.highlightFa : activeDim.highlightEn}
+                            </p>
+                          </div>
+
+                          <div className="space-y-2 pt-2 border-t border-white/10">
+                            <span className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider block">
+                              {lang === 'en' ? 'Core Tools & Standards:' : 'ابزارها و استانداردهای تخصصی:'}
+                            </span>
+                            <div className="p-3 rounded-2xl bg-black/40 border border-white/10 text-xs font-mono font-bold text-neutral-200">
+                              {isFa ? activeDim.toolsFa : activeDim.toolsEn}
+                            </div>
+                          </div>
+
+                          <div className="pt-2">
+                            <button
+                              type="button"
+                              onClick={() => setViewMode('linear_timeline')}
+                              className="w-full py-2.5 rounded-full bg-[#d4ff14] hover:bg-[#c2eb00] text-neutral-950 font-black text-xs transition-colors cursor-pointer text-center font-display block"
+                            >
+                              {lang === 'en' ? 'Inspect Related Timeline Milestones →' : 'بررسی سوابق کاری مرتبط با این مهارت ←'}
+                            </button>
                           </div>
                         </div>
-                      )}
-                    </div>
-                  );
-                })()}
+                      );
+                    })()}
+                  </div>
+                </div>
               </div>
-            ) : (
-              /* ALTERNATIVE: ALL CARDS BENTO GRID (IF USER TOGGLES ALL CARDS) */
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                {filteredExperiences.map((item, idx) => {
-                  const meta = EXPERIENCE_SCALE_MAP[item.id];
-                  const theme = getCategoryTheme(item.category, meta?.tier);
-                  const highlights = item.highlights[lang] || [];
-                  const isFlagship = meta?.tier === 'flagship';
+            </div>
+          )}
 
-                  return (
-                    <div
-                      key={item.id}
-                      className={`group bg-white rounded-2xl border p-6 space-y-4 transition-all duration-300 shadow-2xs hover:shadow-lg ${
-                        isFlagship
-                          ? 'border-indigo-200/90 ring-1 ring-indigo-100/70'
-                          : 'border-slate-200'
-                      } ${theme.borderHover}`}
-                    >
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                        <div className="flex items-center gap-2">
-                          <span className={`w-6 h-6 rounded-lg font-mono font-bold text-xs flex items-center justify-center ${theme.counterBg}`}>
-                            {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
-                          </span>
-                          <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${theme.badge}`}>
-                            {item.badge}
-                          </span>
-                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-50 text-slate-700 border border-slate-200 flex items-center gap-1">
-                            <MapPin className="w-3 h-3 text-indigo-500" />
-                            <span>{meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn']}</span>
-                          </span>
-                        </div>
-                        <span className="text-xs font-mono text-slate-500">
-                          {item.period[lang]}
-                        </span>
-                      </div>
-
-                      <div className="space-y-1">
-                        <h3 className="font-black text-slate-950 text-lg">
-                          {item.company[lang]}
-                        </h3>
-                        <div className="flex items-center gap-2 text-xs">
-                          <span className={`px-2 py-0.5 rounded font-bold ${theme.pillBg}`}>
-                            {item.role[lang]}
-                          </span>
-                          <span className="text-slate-400">·</span>
-                          <span className="text-slate-600">{item.type[lang]}</span>
-                        </div>
-                      </div>
-
-                      <div className={`p-2.5 rounded-xl border text-xs font-bold ${theme.scopeBg}`}>
-                        {lang === 'en' ? meta?.scopeBadgeEn : meta?.scopeBadgeFa}
-                      </div>
-
-                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        {item.summary[lang]}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* ============================================================= */}
-          {/* B. MOBILE VIEW: VERTICAL CHRONOLOGICAL SPINE WITH ACCORDIONS */}
-          {/* ============================================================= */}
-          <div className="block lg:hidden space-y-6">
-            <div className="relative pl-6 sm:pl-8 rtl:pl-0 rtl:pr-6 rtl:sm:pr-8 space-y-6">
-              {/* Vertical connecting line */}
-              <div className="absolute top-3 bottom-3 left-2.5 rtl:left-auto rtl:right-2.5 w-0.5 bg-slate-200" />
-
+          {/* VIEW MODE 3: ALL DOSSIER CARDS (ScreenHunter_285 Style Grid) */}
+          {viewMode === 'all_cards' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               {filteredExperiences.map((item, idx) => {
-                const isExpanded = mobileExpanded[item.id] ?? false;
                 const meta = EXPERIENCE_SCALE_MAP[item.id];
-                const theme = getCategoryTheme(item.category, meta?.tier);
+                const itemPalette = MILESTONE_PALETTES[item.id] || MILESTONE_PALETTES['exp_rst'];
                 const highlights = item.highlights[lang] || [];
-                const isFlagship = meta?.tier === 'flagship';
+                const asymmetricShape = isFa
+                  ? 'rounded-tl-[24px] sm:rounded-tl-[36px] rounded-b-[24px] sm:rounded-b-[36px] rounded-tr-none'
+                  : 'rounded-tr-[24px] sm:rounded-tr-[36px] rounded-b-[24px] sm:rounded-b-[36px] rounded-tl-none';
 
                 return (
-                  <div key={item.id} className="relative group">
-                    {/* Node Dot on vertical spine */}
-                    <div
-                      className={`absolute top-4 left-[-19px] rtl:left-auto rtl:right-[-19px] w-5 h-5 rounded-full border-2 border-white shadow-xs flex items-center justify-center ${theme.counterBg} ring-4 ring-slate-100`}
-                    >
-                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                    </div>
-
-                    {/* Milestone Card */}
-                    <div
-                      className={`bg-white rounded-2xl border p-5 space-y-3.5 transition-all shadow-2xs hover:shadow-md ${
-                        isFlagship
-                          ? 'border-indigo-200/90 ring-1 ring-indigo-100/70 bg-linear-to-b from-indigo-50/15 to-white'
-                          : 'border-slate-200'
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span className={`w-5 h-5 rounded-md font-mono font-bold text-[10px] flex items-center justify-center ${theme.counterBg}`}>
-                            {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
-                          </span>
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${theme.badge}`}>
-                            {item.badge}
-                          </span>
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-50 text-slate-700 border border-slate-200 flex items-center gap-1">
-                            <MapPin className="w-3 h-3 text-indigo-500" />
-                            <span>{meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn']}</span>
-                          </span>
-                          {isFlagship && (
-                            <span className="px-2 py-0.5 bg-indigo-600 text-white font-bold text-[10px] rounded-full">
-                              {lang === 'en' ? 'Flagship' : 'پروژه کلان'}
-                            </span>
-                          )}
-                        </div>
-
-                        <span className="text-xs font-mono font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full">
-                          {meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang]}
+                  <div key={item.id} className="relative group flex flex-col pt-3">
+                    {/* Top Manila Folder Tab with Milestone Signature Color */}
+                    <div className="flex items-center justify-between px-2">
+                      <div
+                        className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2 rounded-t-2xl font-mono text-xs font-black tracking-wider uppercase z-10 -mb-px border-t border-x ${itemPalette.tabBgClass}`}
+                      >
+                        <span
+                          style={{ backgroundColor: itemPalette.accentHex }}
+                          className="w-2 h-2 rounded-full"
+                        />
+                        <span>
+                          // {lang === 'en' ? 'DOSSIER' : 'پرونده'} {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
                         </span>
                       </div>
 
-                      <div className="space-y-1">
-                        <h3 className="font-black text-slate-950 text-base">
+                      <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase">
+                        {meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang]}
+                      </span>
+                    </div>
+
+                    {/* Card Body with Milestone Theme */}
+                    <div
+                      style={{
+                        boxShadow: `0 14px 34px -10px ${itemPalette.glowRgba}`,
+                      }}
+                      className={`${asymmetricShape} p-5 sm:p-7 space-y-4 flex-1 flex flex-col justify-between transition-all duration-300 border ${itemPalette.cardBorderClass} ${itemPalette.cardBgClass}`}
+                    >
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                          <span className="text-xs font-bold text-neutral-300 font-display">
+                            {meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] || item.location[lang]}
+                          </span>
+                          <span
+                            style={{ borderColor: `${itemPalette.accentHex}40`, color: itemPalette.accentHex }}
+                            className="text-[11px] font-bold px-2.5 py-0.5 rounded-full border bg-white/5"
+                          >
+                            {item.badge}
+                          </span>
+                        </div>
+
+                        <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white">
                           {item.company[lang]}
                         </h3>
-                        <div className="flex flex-wrap items-center gap-2 text-xs">
-                          <span className={`px-2 py-0.5 text-xs font-bold rounded ${theme.pillBg}`}>
-                            {item.role[lang]}
-                          </span>
-                          <span className="text-slate-400">·</span>
-                          <span className="text-slate-500 font-medium">{item.location[lang]}</span>
-                        </div>
-                      </div>
 
-                      {/* Scope & Volume progress bar on mobile */}
-                      <div className="space-y-1.5 p-2.5 rounded-xl border bg-slate-50/70 border-slate-200/80">
-                        <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-                          <span className="flex items-center gap-1.5">
-                            <TrendingUp className="w-3.5 h-3.5 text-indigo-600" />
-                            <span>{lang === 'en' ? meta?.scopeBadgeEn : meta?.scopeBadgeFa}</span>
-                          </span>
-                          <span className="font-mono text-emerald-700 font-black">
-                            {meta?.volumeScore}%
-                          </span>
-                        </div>
-                        <div className="h-1.5 rounded-full bg-slate-200 overflow-hidden">
-                          <div
-                            style={{ width: `${meta?.volumeScore || 60}%` }}
-                            className="bg-indigo-600 h-full rounded-full"
-                          />
-                        </div>
-                      </div>
+                        <p
+                          style={{ color: itemPalette.accentHex }}
+                          className="text-xs sm:text-sm font-bold"
+                        >
+                          {item.role[lang]}
+                        </p>
 
-                      <p className="text-xs text-slate-600 leading-relaxed">
-                        {item.summary[lang]}
-                      </p>
+                        <p className="text-xs sm:text-sm leading-relaxed font-medium text-neutral-300">
+                          {item.summary[lang]}
+                        </p>
 
-                      {highlights.length > 0 && (
-                        <div className="pt-1 border-t border-slate-100">
-                          <button
-                            type="button"
-                            onClick={() => toggleMobileExpand(item.id)}
-                            className="w-full flex items-center justify-between text-xs font-bold text-slate-700 hover:text-slate-950 py-1 cursor-pointer"
-                          >
-                            <span className="flex items-center gap-1.5">
-                              <CheckCircle2 className={`w-3.5 h-3.5 ${theme.deliverableCheck}`} />
-                              <span>
-                                {lang === 'en'
-                                  ? `${highlights.length} Deliverables`
-                                  : `${highlights.length} دستاورد کلیدی`}
-                              </span>
-                            </span>
-                            {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                          </button>
-
-                          {isExpanded && (
-                            <div className="space-y-1.5 pt-2 animate-fadeIn">
-                              {highlights.map((hl, hIdx) => (
-                                <div
-                                  key={hIdx}
-                                  className={`p-2 rounded-lg border flex items-start gap-2 text-xs text-slate-800 ${theme.deliverableCard}`}
-                                >
-                                  <span className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${theme.deliverableDot}`} />
-                                  <span>{hl}</span>
-                                </div>
-                              ))}
+                        {/* Top Highlights Preview */}
+                        <div className="space-y-1.5 pt-2">
+                          {highlights.slice(0, 2).map((h, hIdx) => (
+                            <div
+                              key={hIdx}
+                              className="flex items-start gap-2 text-xs font-semibold text-neutral-200"
+                            >
+                              <CheckCircle2
+                                style={{ color: itemPalette.accentHex }}
+                                className="w-3.5 h-3.5 shrink-0 mt-0.5"
+                              />
+                              <span className="line-clamp-2">{h}</span>
                             </div>
-                          )}
+                          ))}
                         </div>
-                      )}
+                      </div>
+
+                      <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedExperienceId(item.id);
+                            setViewMode('linear_timeline');
+                            window.scrollTo({ top: 300, behavior: 'smooth' });
+                          }}
+                          style={{ color: itemPalette.accentHex }}
+                          className="text-xs font-black inline-flex items-center gap-1.5 cursor-pointer font-display hover:underline"
+                        >
+                          <span>{lang === 'en' ? 'Inspect Full Dossier' : 'بررسی پرونده کامل'}</span>
+                          <ArrowIcon className="w-3.5 h-3.5" />
+                        </button>
+                        <span className="text-[10px] font-mono text-neutral-400">
+                          [ ISO 12647-2 ]
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );
               })}
             </div>
-          </div>
-        </>
+          )}
+        </div>
       )}
 
-      {/* 6. DIRECT CONTACT CALLOUT (Icon-First Actions, Zero Phone Text) */}
-      <section className="bg-linear-to-r from-slate-950 to-neutral-900 text-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 border border-neutral-800 space-y-6">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <span className="text-xs font-bold text-indigo-400 font-display uppercase tracking-wider block">
-              {lang === 'en' ? 'Direct Communication' : 'مشاوره و استعلام مستقیم'}
-            </span>
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              {lang === 'en'
-                ? 'Ready to elevate your product communication?'
-                : 'آماده همکاری در زمینه ارتقای هویت و ارتباطات بصری محصول'}
-            </h2>
-            <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed font-medium">
-              {lang === 'en'
-                ? 'Available for strategic brand identities, 3D packaging visualization, and comprehensive industrial publishing.'
-                : 'آماده هدایت هنری پروژه‌ها، خلق سیستم‌های هویت بصری، رندرینگ سه‌بعدی و کاتالوگ‌های جامع صنعتی.'}
-            </p>
-          </div>
+      {/* 6. CALLOUT: CO-CREATION INQUIRY */}
+      <section className="bg-neutral-950 text-white rounded-3xl p-8 sm:p-12 space-y-6 border border-neutral-800 shadow-xl">
+        <div className="max-w-3xl space-y-3">
+          <span className="text-xs font-mono font-bold text-[#d4ff14] uppercase tracking-widest block">
+            // NEXT COMMERCIAL COLLABORATION
+          </span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+            {lang === 'en'
+              ? 'Ready to Elevate Your Brand Architecture & Shelf Packaging?'
+              : 'آماده همکاری در زمینه ارتقای هویت و ارتباطات بصری محصول'}
+          </h2>
+          <p className="text-sm text-neutral-300 leading-relaxed font-medium">
+            {lang === 'en'
+              ? 'Whether developing technical export catalogs, rigid packaging lines, or full identity redesigns, let’s schedule a direct, honest conversation.'
+              : 'آماده هدایت هنری پروژه‌ها، خلق سیستم‌های هویت بصری، رندرینگ سه‌بعدی و کاتالوگ‌های چندصد صفحه‌ای صنعتی با بالاترین دقت لیتوگرافی و چاپ.'}
+          </p>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Quick Action Icons */}
-            <a
-              href={`tel:${PROFILE_DATA.links.phone}`}
-              className="p-3 bg-neutral-800/90 hover:bg-neutral-700 text-white rounded-xl transition-colors inline-flex items-center justify-center border border-neutral-700 hover:border-indigo-400"
-              title={lang === 'en' ? 'Call Directly' : 'تماس تلفنی'}
-              aria-label="Phone"
-            >
-              <Phone className="w-4 h-4" />
-            </a>
+        <div className="pt-2 flex flex-wrap items-center gap-4">
+          <a
+            href={`tel:${PROFILE_DATA.links.phone}`}
+            className="px-6 py-3.5 bg-[#d4ff14] hover:bg-[#c2eb00] text-neutral-950 font-black text-sm rounded-full transition-all flex items-center gap-2 cursor-pointer shadow-md font-display"
+          >
+            <Phone className="w-4 h-4 text-neutral-950" />
+            <span>{lang === 'en' ? 'Direct Call' : 'تماس مستقیم تلفنی'}</span>
+          </a>
 
-            <a
-              href={PROFILE_DATA.links.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 bg-neutral-800/90 hover:bg-neutral-700 text-emerald-400 rounded-xl transition-colors inline-flex items-center justify-center border border-neutral-700 hover:border-emerald-400"
-              title="WhatsApp"
-              aria-label="WhatsApp"
-            >
-              <MessageCircle className="w-4 h-4" />
-            </a>
+          <a
+            href={PROFILE_DATA.links.telegram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold text-sm rounded-full border border-white/20 transition-all flex items-center gap-2 cursor-pointer font-display"
+          >
+            <Send className="w-4 h-4 text-white" />
+            <span>{lang === 'en' ? 'Telegram' : 'تلگرام'}</span>
+          </a>
 
-            <a
-              href={PROFILE_DATA.links.telegram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 bg-neutral-800/90 hover:bg-neutral-700 text-sky-400 rounded-xl transition-colors inline-flex items-center justify-center border border-neutral-700 hover:border-sky-400"
-              title="Telegram"
-              aria-label="Telegram"
-            >
-              <Send className="w-4 h-4" />
-            </a>
+          <a
+            href={PROFILE_DATA.links.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-full transition-all flex items-center gap-2 cursor-pointer font-display"
+          >
+            <MessageCircle className="w-4 h-4 text-white" />
+            <span>WhatsApp</span>
+          </a>
 
-            <button
-              type="button"
-              onClick={() => onNavigate('contact')}
-              className="px-5 py-3 rounded-xl bg-white text-neutral-950 hover:bg-neutral-100 font-bold text-xs transition-colors cursor-pointer inline-flex items-center gap-2 shadow-xs font-display"
-            >
-              <span>{lang === 'en' ? 'Contact Page' : 'صفحه تماس و شبکه‌ها'}</span>
-              <ArrowIcon className="w-4 h-4" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => onNavigate('contact')}
+            className="px-6 py-3.5 bg-white/5 hover:bg-white/10 text-neutral-300 font-bold text-sm rounded-full border border-white/10 transition-all cursor-pointer font-display"
+          >
+            <span>{lang === 'en' ? 'Inquiry Form' : 'فرم استعلام'}</span>
+          </button>
         </div>
       </section>
     </div>

@@ -83,7 +83,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onToggleLang}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 transition-colors cursor-pointer"
-              title="Switch Language / تغییر زبان"
+              title={lang === 'en' ? 'Switch Language' : 'تغییر زبان'}
             >
               <Globe className="w-3.5 h-3.5 text-neutral-600" />
               <span className="font-display uppercase tracking-wider">{lang === 'en' ? 'FA' : 'EN'}</span>
