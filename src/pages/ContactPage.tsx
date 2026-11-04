@@ -101,27 +101,18 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
               </a>
             </div>
 
-            {/* Direct One-Click Icon Action Channels */}
+            {/* Direct One-Click Messaging Channels */}
             <div className="space-y-2">
               <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider font-display block">
-                {lang === 'en' ? 'Quick Actions' : 'شروع سریع ارتباط'}
+                {lang === 'en' ? 'Instant Messaging Channels' : 'پیام‌رسان‌های برخط'}
               </span>
 
-              <div className="grid grid-cols-3 gap-2.5">
-                <a
-                  href={`tel:${PROFILE_DATA.links.phone}`}
-                  className="p-3 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 text-center group shadow-2xs"
-                  title={lang === 'en' ? 'Call Directly' : 'تماس مستقیم تلفنی'}
-                >
-                  <Phone className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-bold">{lang === 'en' ? 'Call' : 'تماس'}</span>
-                </a>
-
+              <div className="grid grid-cols-2 gap-2.5">
                 <a
                   href={PROFILE_DATA.links.whatsapp}
                   target="_blank"
                   rel="noreferrer"
-                  className="p-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 text-center group shadow-2xs"
+                  className="p-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 text-center group shadow-2xs"
                   title="WhatsApp"
                 >
                   <MessageCircle className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
@@ -132,7 +123,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang, onNavigate }) =>
                   href={PROFILE_DATA.links.telegram}
                   target="_blank"
                   rel="noreferrer"
-                  className="p-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 text-center group shadow-2xs"
+                  className="p-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 text-center group shadow-2xs"
                   title={lang === 'en' ? 'Telegram' : 'تلگرام'}
                 >
                   <Send className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />

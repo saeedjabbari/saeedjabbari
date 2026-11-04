@@ -321,15 +321,20 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* 2. THE 4-STEP COLLABORATION ROADMAP (Clear, Reassuring & Human-First) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        <div className="text-center max-w-3xl mx-auto space-y-3">
+        <div className="text-center max-w-4xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold font-display">
             <span className="w-1.5 h-1.5 rounded-full bg-indigo-600" />
             <span>{lang === 'en' ? 'How We Work Together' : 'مسیر همکاری شفاف با استودیو'}</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-neutral-950 tracking-tight">
-            {lang === 'en'
-              ? 'A Reassuring, Step-by-Step Partnership'
-              : 'فرآیندی شفاف، مطمئن و گام‌به‌گام برای موفقیت پروژه شما'}
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-neutral-950 tracking-tight leading-snug">
+            {lang === 'en' ? (
+              'A Reassuring, Step-by-Step Partnership'
+            ) : (
+              <>
+                <span className="block sm:inline">فرآیندی شفاف، مطمئن و گام‌به‌گام </span>
+                <span className="block sm:inline">برای موفقیت پروژه شما</span>
+              </>
+            )}
           </h2>
           <p className="text-sm sm:text-base text-neutral-600 leading-relaxed font-medium">
             {lang === 'en'

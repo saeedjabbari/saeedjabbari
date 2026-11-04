@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { EXPERIENCE_DATA, PROFILE_DATA } from '../data/portfolioData';
 import { ExperienceItem, Language, PageId } from '../types';
+import { VerticalCareerTimeline } from '../components/VerticalCareerTimeline';
 
 interface ExperiencePageProps {
   lang: Language;
@@ -976,19 +977,154 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
     }
   };
 
-  // -------------------------------------------------------------
-  // LINEAR TIMELINE: Sorted Chronologically (Oldest 2016 -> Newest 2026)
-  // Left to Right in BOTH English and Persian!
-  // Alternating one above, one below the horizontal line!
-  // -------------------------------------------------------------
-  const chronologicalTimelineItems = useMemo(() => {
-    // Reverse filtered experiences so they increase left-to-right (2016 -> 2026)
+  // Timeline chronological ordering: default newest_first (2026/1404 -> 2016/1395)
+  const [timelineOrder, setTimelineOrder] = useState<'newest_first' | 'oldest_first'>('newest_first');
+
+  const verticalTimelineItems = useMemo(() => {
     return [...filteredExperiences].sort((a, b) => {
       const scoreA = EXPERIENCE_CHRONO_MAP[a.id] || 0;
       const scoreB = EXPERIENCE_CHRONO_MAP[b.id] || 0;
-      return scoreA - scoreB;
+      return timelineOrder === 'newest_first' ? scoreB - scoreA : scoreA - scoreB;
     });
-  }, [filteredExperiences]);
+  }, [filteredExperiences, timelineOrder]);
+
+  const chronologicalTimelineItems = verticalTimelineItems;
+
+  // Compact & Concise Project Dossier Card Renderer (Responsive & High-Hierarchy)
+  const renderCompactDossier = (item: ExperienceItem, isInlineMobile = false) => {
+    const meta = EXPERIENCE_SCALE_MAP[item.id];
+    const isFlagship = meta?.tier === 'flagship';
+    const highlights = item.highlights[lang] || [];
+    const palette = MILESTONE_PALETTES[item.id] || MILESTONE_PALETTES['exp_rst'];
+    const itemIndex = filteredExperiences.findIndex((i) => i.id === item.id);
+    const displayNum = itemIndex >= 0 ? (itemIndex + 1 < 10 ? `0${itemIndex + 1}` : `${itemIndex + 1}`) : '01';
+
+    return (
+      <div className={`relative group ${isInlineMobile ? 'mt-2 mb-3' : ''}`}>
+        {/* Top Folder Tab */}
+        <div className="flex items-center justify-between px-2">
+          <div
+            className={`inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-t-xl font-mono text-[11px] font-black tracking-wider uppercase z-10 -mb-px border-t border-x ${palette.tabBgClass}`}
+          >
+            <span
+              style={{ backgroundColor: palette.accentHex }}
+              className="w-2 h-2 rounded-full animate-pulse shrink-0"
+            />
+            <span>
+              // {lang === 'en' ? 'DOSSIER' : 'پرونده'} {displayNum} · {item.badge}
+            </span>
+          </div>
+
+          <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase hidden sm:inline">
+            {meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang]}
+          </span>
+        </div>
+
+        {/* Main Compact Card Container with Milestone Theme */}
+        <div
+          style={{
+            boxShadow: `0 16px 36px -12px ${palette.glowRgba}`,
+          }}
+          className={`rounded-2xl sm:rounded-3xl p-4 sm:p-6 space-y-4 shadow-lg transition-all border ${palette.cardBorderClass} ${palette.cardBgClass}`}
+        >
+          {/* Header */}
+          <div className="space-y-1.5 border-b border-white/10 pb-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex flex-wrap items-center gap-1.5">
+                {isFlagship && (
+                  <span
+                    style={{ backgroundColor: palette.accentHex, color: '#09090b' }}
+                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-black text-[11px] font-display shadow-2xs"
+                  >
+                    <Star className="w-3 h-3 fill-current text-current" />
+                    <span>{lang === 'en' ? 'Flagship' : 'شاخص'}</span>
+                  </span>
+                )}
+                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-white/20 bg-white/10 text-white font-display flex items-center gap-1">
+                  <MapPin style={{ color: palette.accentHex }} className="w-3 h-3" />
+                  <span>{meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] || item.location[lang]}</span>
+                </span>
+              </div>
+
+              <span
+                style={{ borderColor: `${palette.accentHex}40`, color: palette.accentHex }}
+                className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border bg-white/5"
+              >
+                {meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang]}
+              </span>
+            </div>
+
+            <h3 className="text-lg sm:text-2xl font-black tracking-tight text-white">
+              {item.company[lang]}
+            </h3>
+
+            <div
+              style={{ color: palette.accentHex }}
+              className="text-xs sm:text-sm font-bold font-display"
+            >
+              {item.role[lang]}
+            </div>
+          </div>
+
+          {/* Mission Brief / Summary (Concise & punchy) */}
+          <p className="text-xs sm:text-sm leading-relaxed font-medium text-neutral-200">
+            {item.summary[lang]}
+          </p>
+
+          {/* Tangible Highlights (Bite-sized bullets) */}
+          <div className="space-y-2 pt-1 border-t border-white/10">
+            <span className="text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-wider block">
+              {lang === 'en' ? '// Core Deliverables:' : '// خروجی‌ها و اقلام تولیدشده:'}
+            </span>
+            <div className="space-y-1.5">
+              {highlights.slice(0, 3).map((h, hIdx) => (
+                <div key={hIdx} className="flex items-start gap-2 text-xs font-semibold text-neutral-100">
+                  <CheckCircle2
+                    style={{ color: palette.accentHex }}
+                    className="w-3.5 h-3.5 shrink-0 mt-0.5"
+                  />
+                  <span className="leading-snug">{h}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Prepress & Workshop Specs Micro-Chips */}
+          <div className="pt-2 border-t border-white/10 flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 text-neutral-300 border border-white/10">
+              {lang === 'en' ? 'ISO 12647-2 Prepress' : 'افست ISO 12647-2'}
+            </span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 text-neutral-300 border border-white/10">
+              {lang === 'en' ? 'Vector CAD Dieline' : 'خط تیغ و ماکت وکتور'}
+            </span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 text-neutral-300 border border-white/10">
+              {lang === 'en' ? 'Color Separation QC' : 'تفکیک زینک و نظارت لیتوگرافی'}
+            </span>
+          </div>
+
+          {/* Footer Action Buttons */}
+          <div className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2.5">
+            <button
+              type="button"
+              onClick={() => onNavigate('work')}
+              className={`px-4 py-2 rounded-full text-xs font-black font-display inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${palette.buttonClass}`}
+            >
+              <span>{lang === 'en' ? 'View Works' : 'مشاهده نمونه‌کارها'}</span>
+              <ArrowIcon className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('contact')}
+              className="px-3.5 py-2 rounded-full text-xs font-bold border border-white/20 text-neutral-200 hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <span>{lang === 'en' ? 'Inquire Project' : 'استعلام پروژه'}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   // -------------------------------------------------------------
   // RADAR / SPIDER CHART COORDINATES
@@ -1175,17 +1311,17 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
             <div
               style={{ width: `${locationStats.tehranPercent}%` }}
               className="bg-indigo-500 hover:bg-indigo-600 transition-all h-full"
-              title={`Tehran: ${locationStats.tehranCount} (${locationStats.tehranPercent}%)`}
+              title={`Tehran: ${locationStats.tehranCount}`}
             />
             <div
               style={{ width: `${locationStats.urmiaPercent}%` }}
               className="bg-emerald-500 hover:bg-emerald-600 transition-all h-full"
-              title={`Urmia: ${locationStats.urmiaCount} (${locationStats.urmiaPercent}%)`}
+              title={`Urmia: ${locationStats.urmiaCount}`}
             />
             <div
               style={{ width: `${locationStats.globalPercent}%` }}
               className="bg-amber-500 hover:bg-amber-600 transition-all h-full"
-              title={`Istanbul/Global: ${locationStats.globalCount} (${locationStats.globalPercent}%)`}
+              title={`Istanbul/Global: ${locationStats.globalCount}`}
             />
           </div>
 
@@ -1193,78 +1329,41 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
             <span className="flex items-center gap-1.5 text-indigo-700">
               <span className="w-2 h-2 rounded-full bg-indigo-500 inline-block" />
               {lang === 'en'
-                ? `Tehran: ${locationStats.tehranPercent}% (${locationStats.tehranCount} proj)`
-                : `تهران: ${locationStats.tehranPercent}٪ (${locationStats.tehranCount} پروژه)`}
+                ? `Tehran: ${locationStats.tehranCount} projects (Enterprise & Brand)`
+                : `تهران: ${locationStats.tehranCount} پروژه سازمانی و برند`}
             </span>
             <span className="flex items-center gap-1.5 text-emerald-700">
               <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
               {lang === 'en'
-                ? `Urmia: ${locationStats.urmiaPercent}% (${locationStats.urmiaCount} proj)`
-                : `ارومیه: ${locationStats.urmiaPercent}٪ (${locationStats.urmiaCount} پروژه)`}
+                ? `Urmia: ${locationStats.urmiaCount} projects (Packaging & Print)`
+                : `ارومیه: ${locationStats.urmiaCount} پروژه بسته‌بندی و چاپ`}
             </span>
             <span className="flex items-center gap-1.5 text-amber-800">
               <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
               {lang === 'en'
-                ? `Istanbul & Global: ${locationStats.globalPercent}% (${locationStats.globalCount} proj)`
-                : `استانبول و بین‌المللی: ${locationStats.globalPercent}٪ (${locationStats.globalCount} پروژه)`}
+                ? `Istanbul & Global: ${locationStats.globalCount} projects (Tech & Trade)`
+                : `استانبول و بین‌المللی: ${locationStats.globalCount} پروژه تجاری و کریپتو`}
             </span>
           </div>
         </div>
       </div>
 
-      {/* 4. CONTROLS BAR: CATEGORIES, SEARCH & VIEW MODE SWITCHER */}
+      {/* 4. CONTROLS BAR: SEARCH & PRIMARY VIEW SWITCHER */}
       <div className="space-y-3">
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-neutral-50 p-3 rounded-2xl border border-neutral-200/80">
-          {/* Category Filter Pills */}
-          <div className="flex flex-wrap items-center gap-1.5">
-            {categories.map((cat) => {
-              const Icon = cat.icon;
-              const isSelected = activeCategory === cat.id;
-              const count =
-                cat.id === 'all'
-                  ? EXPERIENCE_DATA.length
-                  : cat.id === 'flagship'
-                  ? Object.values(EXPERIENCE_SCALE_MAP).filter((m) => m.tier === 'flagship').length
-                  : EXPERIENCE_DATA.filter((i) => i.category === cat.id).length;
-
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer font-display ${
-                    isSelected
-                      ? cat.activeColor
-                      : 'bg-white hover:bg-neutral-200/70 text-neutral-700 border border-neutral-200/60'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{lang === 'en' ? cat.labelEn : cat.labelFa}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                      isSelected ? cat.activeBadge : 'bg-neutral-100 text-neutral-500'
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-neutral-50 p-3 rounded-2xl border border-neutral-200/80">
+          {/* Search Box */}
+          <div className="relative flex-1 sm:max-w-xs">
+            <Search className={`w-3.5 h-3.5 text-neutral-400 absolute top-1/2 -translate-y-1/2 ${isFa ? 'right-3' : 'left-3'}`} />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={lang === 'en' ? 'Search records...' : 'جستجو در شرکت، شهر...'}
+              className={`w-full text-xs font-medium bg-white border border-neutral-200 rounded-xl py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
+                isFa ? 'pr-9 pl-3 text-right' : 'pl-9 pr-3 text-left'
+              }`}
+            />
           </div>
-
-          {/* Right Controls: Search & Primary View Switcher */}
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1 sm:w-60">
-              <Search className={`w-3.5 h-3.5 text-neutral-400 absolute top-1/2 -translate-y-1/2 ${isFa ? 'right-3' : 'left-3'}`} />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={lang === 'en' ? 'Search records...' : 'جستجو در شرکت، شهر...'}
-                className={`w-full text-xs font-medium bg-white border border-neutral-200 rounded-xl py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
-                  isFa ? 'pr-9 pl-3 text-right' : 'pl-9 pr-3 text-left'
-                }`}
-              />
-            </div>
 
             {/* View Mode Switcher: Linear Timeline vs Radar Matrix vs All Cards */}
             <div className="flex items-center bg-white border border-neutral-200 rounded-xl p-0.5 shadow-2xs shrink-0">
@@ -1311,7 +1410,6 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
               </button>
             </div>
           </div>
-        </div>
 
         {/* Filter State Note */}
         {(activeCategory !== 'all' || activeLocation !== 'all' || searchQuery) && (
@@ -1358,475 +1456,16 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
         </div>
       ) : (
         <div className="space-y-10">
-          {/* VIEW MODE 1: ALTERNATING LINEAR TIMELINE */}
+          {/* VIEW MODE 1: VERTICAL TIMELINE WITH SIDE-BY-SIDE COMPACT DOSSIER */}
           {viewMode === 'linear_timeline' && (
-            <div className="space-y-8">
-              {/* Timeline Container: Adaptive Mobile Scrubber + Desktop Alternating Timeline */}
-              {(() => {
-                const activePalette = MILESTONE_PALETTES[currentSpotlightItem.id] || MILESTONE_PALETTES['exp_rst'];
-
-                return (
-                  <div className="space-y-6">
-                    {/* 1. TOP HEADER & NAVIGATION BAR */}
-                    <div className="bg-white rounded-3xl border border-neutral-200/90 shadow-sm p-5 sm:p-7 space-y-5">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-100 pb-4">
-                        <div className="space-y-1.5">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span
-                              style={{ backgroundColor: `${activePalette.accentHex}20`, color: activePalette.accentHex, borderColor: `${activePalette.accentHex}40` }}
-                              className="font-mono text-xs font-black px-3 py-1 rounded-full border flex items-center gap-1.5"
-                            >
-                              <span
-                                style={{ backgroundColor: activePalette.accentHex }}
-                                className="w-2 h-2 rounded-full animate-ping"
-                              />
-                              {lang === 'en'
-                                ? `Milestone ${currentSpotlightIndex + 1} of ${filteredExperiences.length}`
-                                : `ایستگاه ${currentSpotlightIndex + 1} از ${filteredExperiences.length}`}
-                            </span>
-                            <span className="text-xs text-neutral-300">·</span>
-                            <span className="text-xs font-bold text-neutral-700 font-mono">
-                              {EXPERIENCE_SCALE_MAP[currentSpotlightItem.id]?.[isFa ? 'timelineYearFa' : 'timelineYearEn'] ||
-                                currentSpotlightItem.period[lang]}
-                            </span>
-                          </div>
-
-                          <h3 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight flex flex-wrap items-center gap-2">
-                            <span>{currentSpotlightItem.company[lang]}</span>
-                            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-600 font-display">
-                              {EXPERIENCE_SCALE_MAP[currentSpotlightItem.id]?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] ||
-                                currentSpotlightItem.location[lang]}
-                            </span>
-                          </h3>
-                        </div>
-
-                        {/* Stepper Controls (Accessible on Mobile and Desktop) */}
-                        <div className="flex items-center gap-2 self-end sm:self-auto">
-                          <button
-                            type="button"
-                            onClick={handlePrevSpotlight}
-                            disabled={currentSpotlightIndex === 0}
-                            className={`p-2.5 sm:p-3 rounded-2xl border transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold ${
-                              currentSpotlightIndex === 0
-                                ? 'opacity-30 border-neutral-200 text-neutral-400 cursor-not-allowed'
-                                : 'border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 shadow-2xs hover:border-neutral-400 active:scale-95'
-                            }`}
-                            title={lang === 'en' ? 'Previous Milestone' : 'ایستگاه قبلی (جدیدتر)'}
-                          >
-                            <PrevChevron className="w-4 h-4" />
-                            <span className="hidden sm:inline">{lang === 'en' ? 'Prev' : 'قبلی'}</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={handleNextSpotlight}
-                            disabled={currentSpotlightIndex === filteredExperiences.length - 1}
-                            className={`p-2.5 sm:p-3 rounded-2xl border transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold ${
-                              currentSpotlightIndex === filteredExperiences.length - 1
-                                ? 'opacity-30 border-neutral-200 text-neutral-400 cursor-not-allowed'
-                                : 'border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 shadow-2xs hover:border-neutral-400 active:scale-95'
-                            }`}
-                            title={lang === 'en' ? 'Next Milestone' : 'ایستگاه بعدی (قدیمی‌تر)'}
-                          >
-                            <span className="hidden sm:inline">{lang === 'en' ? 'Next' : 'بعدی'}</span>
-                            <NextChevron className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Subtitle Guideline */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] font-bold text-neutral-500 font-mono gap-2">
-                        <span className="flex items-center gap-1.5">
-                          <span
-                            style={{ backgroundColor: activePalette.accentHex }}
-                            className="w-2 h-2 rounded-full inline-block"
-                          />
-                          {lang === 'en'
-                            ? 'Color-Coded Milestones: Each station has a distinct signature palette'
-                            : 'تفکیک رنگی سوابق: هر ایستگاه دارای پالت رنگی و هویتی اختصاصی است'}
-                        </span>
-                        <span className="text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-100 self-start sm:self-auto">
-                          {lang === 'en'
-                            ? 'Chronological Order: 2016 (Left) → 2026 (Right)'
-                            : 'ترتیب زمانی: ۱۳۹۵ (چپ) → ۱۴۰۴ (راست)'}
-                        </span>
-                      </div>
-
-                      {/* 2. DEDICATED MOBILE MILESTONE SCRUBBER (< md screens) */}
-                      <div className="block md:hidden pt-2">
-                        <div className="text-[11px] font-bold text-neutral-500 mb-2">
-                          {lang === 'en' ? 'Swipe milestones to select:' : 'سوابق را ورق بزنید و انتخاب کنید:'}
-                        </div>
-                        <div
-                          className="overflow-x-auto pb-3 pt-1 -mx-2 px-2 flex items-center gap-2 select-none snap-x"
-                          dir="ltr"
-                        >
-                          {chronologicalTimelineItems.map((item) => {
-                            const isSelected = item.id === currentSpotlightItem.id;
-                            const palette = MILESTONE_PALETTES[item.id] || MILESTONE_PALETTES['exp_rst'];
-                            const meta = EXPERIENCE_SCALE_MAP[item.id];
-                            const yearStr = meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang];
-
-                            return (
-                              <button
-                                key={item.id}
-                                type="button"
-                                onClick={() => setSelectedExperienceId(item.id)}
-                                style={
-                                  isSelected
-                                    ? {
-                                        borderColor: palette.accentHex,
-                                        boxShadow: `0 4px 14px -2px ${palette.glowRgba}`,
-                                      }
-                                    : undefined
-                                }
-                                className={`shrink-0 snap-center px-3.5 py-2 rounded-2xl border text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                                  isSelected
-                                    ? `${palette.pillSelectedClass} scale-102`
-                                    : 'bg-neutral-50 hover:bg-neutral-100 text-neutral-700 border-neutral-200'
-                                }`}
-                              >
-                                <span
-                                  style={{ backgroundColor: palette.accentHex }}
-                                  className="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs"
-                                />
-                                <span className="font-mono text-xs">{yearStr}</span>
-                                <span className="max-w-[110px] truncate text-[11px] font-medium opacity-90">
-                                  {item.company[lang].split('|')[0].trim()}
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* 3. DESKTOP ALTERNATING TIMELINE (hidden on mobile, visible on md and up) */}
-                      <div className="hidden md:block overflow-x-auto pb-4 pt-2 -mx-2 px-2 select-none" dir="ltr">
-                        <div className="min-w-[960px] py-12 px-6 relative">
-                          {/* Continuous Baseline Track */}
-                          <div className="absolute top-1/2 left-6 right-6 h-1 bg-neutral-200 -translate-y-1/2 rounded-full z-0" />
-                          <div className="absolute top-1/2 left-6 right-6 h-0.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-amber-500 -translate-y-1/2 rounded-full z-0 opacity-80" />
-
-                          {/* Nodes and Alternating Top/Bottom Cards */}
-                          <div className="relative z-10 flex items-center justify-between">
-                            {chronologicalTimelineItems.map((item, idx) => {
-                              const isEven = idx % 2 === 0; // Even: ABOVE the line | Odd: BELOW the line
-                              const isSelected = item.id === currentSpotlightItem.id;
-                              const palette = MILESTONE_PALETTES[item.id] || MILESTONE_PALETTES['exp_rst'];
-                              const meta = EXPERIENCE_SCALE_MAP[item.id];
-                              const yearStr = meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang];
-
-                              return (
-                                <div
-                                  key={item.id}
-                                  onClick={() => setSelectedExperienceId(item.id)}
-                                  className="flex flex-col items-center cursor-pointer group relative flex-1"
-                                >
-                                  {/* TOP CARD (For Even Indices) */}
-                                  {isEven ? (
-                                    <div className="mb-4 flex flex-col items-center transition-all duration-300 group-hover:-translate-y-1">
-                                      <div
-                                        style={
-                                          isSelected
-                                            ? {
-                                                borderColor: palette.accentHex,
-                                                boxShadow: `0 8px 24px -4px ${palette.glowRgba}`,
-                                              }
-                                            : undefined
-                                        }
-                                        className={`p-3 rounded-2xl border text-center transition-all duration-200 max-w-[150px] ${
-                                          isSelected
-                                            ? 'bg-neutral-950 text-white shadow-md ring-2 scale-105'
-                                            : 'bg-white hover:bg-neutral-50 border-neutral-200 shadow-2xs'
-                                        }`}
-                                      >
-                                        <span
-                                          style={{ color: palette.accentHex }}
-                                          className="text-[10px] font-mono font-bold block"
-                                        >
-                                          {yearStr}
-                                        </span>
-                                        <h4
-                                          className={`text-xs font-black truncate max-w-[130px] ${
-                                            isSelected ? 'text-white' : 'text-neutral-900'
-                                          }`}
-                                        >
-                                          {item.company[lang]}
-                                        </h4>
-                                        <span
-                                          className={`text-[10px] block truncate max-w-[130px] font-medium ${
-                                            isSelected ? 'text-neutral-300' : 'text-neutral-500'
-                                          }`}
-                                        >
-                                          {meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] || item.location[lang]}
-                                        </span>
-                                      </div>
-                                      {/* Stem connecting down to circle */}
-                                      <div
-                                        style={{ backgroundColor: isSelected ? palette.accentHex : undefined }}
-                                        className={`w-0.5 h-6 transition-colors ${
-                                          isSelected ? '' : 'bg-neutral-300 group-hover:bg-neutral-400'
-                                        }`}
-                                      />
-                                    </div>
-                                  ) : (
-                                    <div className="h-[92px] w-full" />
-                                  )}
-
-                                  {/* CENTER NODE CIRCLE (With Distinct Milestone Color) */}
-                                  <div className="relative flex items-center justify-center my-1">
-                                    {isSelected && (
-                                      <span
-                                        style={{ backgroundColor: palette.glowRgba }}
-                                        className="absolute w-8 h-8 rounded-full animate-ping"
-                                      />
-                                    )}
-                                    <div
-                                      style={{
-                                        borderColor: isSelected ? palette.accentHex : undefined,
-                                        backgroundColor: isSelected ? palette.accentHex : 'white',
-                                      }}
-                                      className={`w-5 h-5 rounded-full border-2 transition-all duration-300 flex items-center justify-center z-10 ${
-                                        isSelected
-                                          ? 'scale-125 shadow-sm'
-                                          : 'border-neutral-400 group-hover:border-neutral-900 group-hover:scale-110'
-                                      }`}
-                                    >
-                                      <div
-                                        style={{
-                                          backgroundColor: isSelected ? '#121316' : palette.accentHex,
-                                        }}
-                                        className="w-2 h-2 rounded-full transition-colors"
-                                      />
-                                    </div>
-                                  </div>
-
-                                  {/* BOTTOM CARD (For Odd Indices) */}
-                                  {!isEven ? (
-                                    <div className="mt-4 flex flex-col items-center transition-all duration-300 group-hover:translate-y-1">
-                                      {/* Stem connecting up to circle */}
-                                      <div
-                                        style={{ backgroundColor: isSelected ? palette.accentHex : undefined }}
-                                        className={`w-0.5 h-6 transition-colors ${
-                                          isSelected ? '' : 'bg-neutral-300 group-hover:bg-neutral-400'
-                                        }`}
-                                      />
-                                      <div
-                                        style={
-                                          isSelected
-                                            ? {
-                                                borderColor: palette.accentHex,
-                                                boxShadow: `0 8px 24px -4px ${palette.glowRgba}`,
-                                              }
-                                            : undefined
-                                        }
-                                        className={`p-3 rounded-2xl border text-center transition-all duration-200 max-w-[150px] ${
-                                          isSelected
-                                            ? 'bg-neutral-950 text-white shadow-md ring-2 scale-105'
-                                            : 'bg-white hover:bg-neutral-50 border-neutral-200 shadow-2xs'
-                                        }`}
-                                      >
-                                        <span
-                                          style={{ color: palette.accentHex }}
-                                          className="text-[10px] font-mono font-bold block"
-                                        >
-                                          {yearStr}
-                                        </span>
-                                        <h4
-                                          className={`text-xs font-black truncate max-w-[130px] ${
-                                            isSelected ? 'text-white' : 'text-neutral-900'
-                                          }`}
-                                        >
-                                          {item.company[lang]}
-                                        </h4>
-                                        <span
-                                          className={`text-[10px] block truncate max-w-[130px] font-medium ${
-                                            isSelected ? 'text-neutral-300' : 'text-neutral-500'
-                                          }`}
-                                        >
-                                          {meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] || item.location[lang]}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <div className="h-[92px] w-full" />
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 4. SPOTLIGHT SHOWCASE: UNIQUE COLOR-THEMED ORGANIC DOSSIER CARD */}
-                    {(() => {
-                      const item = currentSpotlightItem;
-                      const meta = EXPERIENCE_SCALE_MAP[item.id];
-                      const isFlagship = meta?.tier === 'flagship';
-                      const highlights = item.highlights[lang] || [];
-                      const asymmetricShape = isFa
-                        ? 'rounded-tl-[24px] sm:rounded-tl-[36px] rounded-b-[24px] sm:rounded-b-[36px] rounded-tr-none'
-                        : 'rounded-tr-[24px] sm:rounded-tr-[36px] rounded-b-[24px] sm:rounded-b-[36px] rounded-tl-none';
-
-                      return (
-                        <div className="relative group pt-4">
-                          {/* Top Manila Folder Tab with Distinct Milestone Color */}
-                          <div className="flex items-center justify-between px-2">
-                            <div
-                              className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-t-2xl font-mono text-xs font-black tracking-wider uppercase z-10 -mb-px border-t border-x ${activePalette.tabBgClass}`}
-                            >
-                              <span
-                                style={{ backgroundColor: activePalette.accentHex }}
-                                className="w-2.5 h-2.5 rounded-full animate-pulse shrink-0"
-                              />
-                              <span>
-                                // {lang === 'en' ? 'DOSSIER' : 'پرونده'} {currentSpotlightIndex + 1 < 10 ? `0${currentSpotlightIndex + 1}` : currentSpotlightIndex + 1} · {item.badge}
-                              </span>
-                            </div>
-
-                            <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase hidden sm:inline">
-                              REF: EXP-0{currentSpotlightIndex + 1}-{item.id.replace('exp_', '').toUpperCase()}
-                            </span>
-                          </div>
-
-                          {/* Main Organic Dossier Container with Milestone Color Theming */}
-                          <div
-                            style={{
-                              boxShadow: `0 24px 50px -15px ${activePalette.glowRgba}`,
-                            }}
-                            className={`${asymmetricShape} p-5 sm:p-8 md:p-10 space-y-6 sm:space-y-8 shadow-xl transition-all border ${activePalette.cardBorderClass} ${activePalette.cardBgClass}`}
-                          >
-                            {/* Header Row with Badges & City */}
-                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-white/10 pb-6">
-                              <div className="space-y-2">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  {isFlagship && (
-                                    <span
-                                      style={{ backgroundColor: activePalette.accentHex, color: '#09090b' }}
-                                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full font-black text-xs font-display shadow-2xs"
-                                    >
-                                      <Star className="w-3.5 h-3.5 fill-current text-current" />
-                                      <span>{lang === 'en' ? 'Flagship Project' : 'پروژه کلان و شاخص'}</span>
-                                    </span>
-                                  )}
-
-                                  <span className="text-xs font-bold px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white font-display flex items-center gap-1.5">
-                                    <MapPin
-                                      style={{ color: activePalette.accentHex }}
-                                      className="w-3.5 h-3.5"
-                                    />
-                                    <span>{meta?.[isFa ? 'cityLabelFa' : 'cityLabelEn'] || item.location[lang]}</span>
-                                  </span>
-
-                                  <span
-                                    style={{ borderColor: `${activePalette.accentHex}50`, color: activePalette.accentHex }}
-                                    className="text-xs font-mono font-bold px-3 py-1 rounded-full border bg-white/5"
-                                  >
-                                    {meta ? (isFa ? meta.timelineYearFa : meta.timelineYearEn) : item.period[lang]}
-                                  </span>
-                                </div>
-
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-                                  {item.company[lang]}
-                                </h3>
-
-                                <div
-                                  style={{ color: activePalette.accentHex }}
-                                  className="text-sm sm:text-base font-bold font-display"
-                                >
-                                  {item.role[lang]}
-                                </div>
-                              </div>
-
-                              {/* Prepress Proof Stamp with Milestone Accent */}
-                              <div
-                                style={{
-                                  borderColor: `${activePalette.accentHex}50`,
-                                  color: activePalette.accentHex,
-                                }}
-                                className="px-4 py-2 rounded-2xl border font-mono text-xs font-bold flex flex-col items-start sm:items-end bg-white/5 self-start sm:self-auto"
-                              >
-                                <span className="text-[10px] text-neutral-400 block font-display">
-                                  {lang === 'en' ? 'VERIFIED RECORD' : 'سند معتبر استودیو'}
-                                </span>
-                                <span>[ ISO 12647-2 PRE-PRESS ]</span>
-                              </div>
-                            </div>
-
-                            {/* Scope & Highlights Description */}
-                            <div className="space-y-4">
-                              <div
-                                style={{ borderColor: `${activePalette.accentHex}30` }}
-                                className="p-4 rounded-2xl border text-xs sm:text-sm font-medium leading-relaxed bg-white/5 text-neutral-200"
-                              >
-                                <span
-                                  style={{ color: activePalette.accentHex }}
-                                  className="font-bold block mb-1"
-                                >
-                                  {lang === 'en' ? '// Scope & Architecture:' : '// دامنه شمول و معماری پروژه:'}
-                                </span>
-                                {meta ? (lang === 'en' ? meta.scopeBadgeEn : meta.scopeBadgeFa) : item.type[lang]}
-                              </div>
-
-                              <p className="text-sm sm:text-base leading-relaxed font-medium text-neutral-300">
-                                {item.summary[lang]}
-                              </p>
-                            </div>
-
-                            {/* Concrete Deliverable Bullet Highlights */}
-                            <div className="space-y-3 pt-2">
-                              <span className="text-xs font-mono font-bold tracking-wider uppercase block text-neutral-400">
-                                {lang === 'en'
-                                  ? `Key Deliverables & Responsibilities (${highlights.length}):`
-                                  : `دستاوردها و خروجی‌های تخصصی (${highlights.length} مورد):`}
-                              </span>
-
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {highlights.map((h, hIdx) => (
-                                  <div
-                                    key={hIdx}
-                                    className="p-3.5 rounded-2xl border border-white/10 text-xs font-medium flex items-start gap-2.5 bg-white/5 text-neutral-200"
-                                  >
-                                    <CheckCircle2
-                                      style={{ color: activePalette.accentHex }}
-                                      className="w-4 h-4 shrink-0 mt-0.5"
-                                    />
-                                    <span className="leading-snug">{h}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Bottom Footer Actions */}
-                            <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
-                              <button
-                                type="button"
-                                onClick={() => onNavigate('work')}
-                                className={`px-6 py-3 rounded-full text-xs font-black font-display inline-flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm ${activePalette.buttonClass}`}
-                              >
-                                <span>{lang === 'en' ? 'Explore Commercial Portfolio' : 'مشاهده پروژه‌ها در نمونه‌کارها'}</span>
-                                <ArrowIcon className="w-4 h-4" />
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => onNavigate('contact')}
-                                className="px-5 py-3 rounded-full text-xs font-bold border border-white/20 text-white hover:bg-white/10 transition-colors cursor-pointer text-center"
-                              >
-                                <span>{lang === 'en' ? 'Inquire About Similar Scope' : 'استعلام پروژه مشابه'}</span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                );
-              })()}
-            </div>
+            <VerticalCareerTimeline
+              lang={lang}
+              onNavigate={onNavigate}
+              filteredExperiences={filteredExperiences}
+              selectedExperienceId={selectedExperienceId}
+              onSelectExperience={setSelectedExperienceId}
+            />
           )}
-
           {/* VIEW MODE 2: INTERACTIVE SPIDER / RADAR CHART */}
           {viewMode === 'radar_matrix' && (
             <div className="space-y-8">
@@ -1850,7 +1489,7 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
                   </div>
 
                   <div className="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-xs font-mono font-bold text-[#d4ff14] shrink-0">
-                    <span>96% AVERAGE EXPERTISE</span>
+                    <span>{lang === 'en' ? '[ INDUSTRIAL & ATELIER STANDARDS ]' : '[ استانداردهای کارگاهی و نشر صنعتی ]'}</span>
                   </div>
                 </div>
 
@@ -1874,7 +1513,6 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
                             }`}
                           >
                             <span>{isFa ? dim.labelFa : dim.labelEn}</span>
-                            <span className="opacity-75 text-[10px] ml-1 font-mono">({dim.score}%)</span>
                           </button>
                         );
                       })}
@@ -1904,26 +1542,12 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
                           />
                         ))}
 
-                        {/* Concentric Percentage Benchmarks */}
-                        {[20, 40, 60, 80, 100].map((pct, idx) => (
-                          <text
-                            key={idx}
-                            x={radarCenter.x}
-                            y={radarCenter.y - (radarRadius * pct) / 100 - 3}
-                            fill="#52525b"
-                            fontSize="8"
-                            fontFamily="monospace"
-                            textAnchor="middle"
-                          >
-                            {pct}%
-                          </text>
-                        ))}
-
-                        {/* Radial Spokes from Center to Outer Rim */}
+                        {/* Radial Spokes from Center - stops 16px before outer rim so lines never stick to dots */}
                         {Array.from({ length: numAxes }).map((_, i) => {
                           const angle = -Math.PI / 2 + i * ((2 * Math.PI) / numAxes);
-                          const x2 = radarCenter.x + radarRadius * Math.cos(angle);
-                          const y2 = radarCenter.y + radarRadius * Math.sin(angle);
+                          const spokeRadius = radarRadius - 16;
+                          const x2 = radarCenter.x + spokeRadius * Math.cos(angle);
+                          const y2 = radarCenter.y + spokeRadius * Math.sin(angle);
                           return (
                             <line
                               key={i}
@@ -1973,19 +1597,19 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
                                 />
                               )}
 
-                              {/* Vertex Dot */}
+                              {/* Vertex Dot with insulating protective border so lines don't collide */}
                               <circle
                                 cx={pt.x}
                                 cy={pt.y}
                                 r={isHovered ? 7 : 5}
                                 fill="#d4ff14"
                                 stroke="#121316"
-                                strokeWidth="2"
+                                strokeWidth="3"
                                 filter={isHovered ? 'url(#radarGlow)' : undefined}
                                 className="transition-all duration-200"
                               />
 
-                              {/* Axis Label */}
+                              {/* Axis Label (Plain qualitative name, no percentages) */}
                               <text
                                 x={lx}
                                 y={ly}
@@ -2002,7 +1626,7 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
                                 }
                                 className="transition-colors"
                               >
-                                {isFa ? pt.dim.labelFa : pt.dim.labelEn} ({pt.dim.score}%)
+                                {isFa ? pt.dim.labelFa : pt.dim.labelEn}
                               </text>
                             </g>
                           );
@@ -2021,8 +1645,8 @@ export const ExperiencePage: React.FC<ExperiencePageProps> = ({
                             <span className="font-mono text-xs font-bold text-[#d4ff14]">
                               // {lang === 'en' ? 'SELECTED DIMENSION' : 'شاخص انتخاب‌شده'}
                             </span>
-                            <span className="text-xl font-black font-mono text-[#d4ff14]">
-                              {activeDim.score}%
+                            <span className="text-xs font-bold font-mono px-3 py-1 rounded-full bg-[#d4ff14]/10 text-[#d4ff14] border border-[#d4ff14]/30">
+                              {lang === 'en' ? 'Core Atelier Standard' : 'تخصص کارگاهی و صنعتی'}
                             </span>
                           </div>
 
